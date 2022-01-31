@@ -4,7 +4,7 @@ version: "3.7"
 
 services:
   postgresdb:
-    container_name: postgresdb_standalone
+    container_name: login_postgresdb
     restart: unless-stopped
     image: postgres:12
 #    volumes:
@@ -18,27 +18,27 @@ services:
     ports:
       - "${EXPOSED_DEFAULT_DATABASE_PORT}:${DEFAULT_DATABASE_PORT}"
     networks:
-      - database
+      - loginapp_database
 
-  test_postgresdb:
-    container_name: test_postgresdb_standalone
-    restart: unless-stopped
-    image: postgres:12
-#    volumes:
-#      - ./data/test_postgresdb_data/db:/var/lib/postgresql/data
+  pgadmin:
+    container_name: login_pgadmin_container
+    image: dpage/pgadmin4
     environment:
-      - POSTGRES_DB=${TEST_DATABASE_DB}
-      - POSTGRES_USER=${TEST_DATABASE_USER}
-      - POSTGRES_PASSWORD=${TEST_DATABASE_PASSWORD}
-    env_file:
-      - .env.compose
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:-pgadmin4@pgadmin.org}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:-admin}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+#    volumes:
+#       - ./data/pgadmin:/var/lib/pgadmin
+    depends_on:
+      - postgresdb
     ports:
-      - "${EXPOSED_TEST_DATABASE_PORT}:${TEST_DATABASE_PORT}"
+      - "${PGADMIN_PORT:-5050}:80"
     networks:
-      - database
+      - loginapp_database
+    restart: unless-stopped
 
 networks:
-  app:
-    name: app
-  database:
-    name: database
+  loginapp:
+    name: loginapp
+  loginapp_database:
+    name: loginapp_database

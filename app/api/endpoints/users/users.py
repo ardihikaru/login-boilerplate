@@ -13,7 +13,7 @@ import httpx
 router = APIRouter()
 
 
-@router.post("/user", response_model=schemas.User)
+@router.post("", response_model=schemas.User)
 async def create_user(
     user_create: schemas.UserCreate,
     session: AsyncSession = Depends(deps.get_session),
