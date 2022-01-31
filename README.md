@@ -1,5 +1,6 @@
 # login-boilerplate
 A complete login application
+- Docker image: [https://hub.docker.com/repository/docker/ardihikaru/login-boilerplate](https://hub.docker.com/repository/docker/ardihikaru/login-boilerplate)
 
 ## Requirements
 - Python >= v3.8
@@ -59,3 +60,45 @@ I will implement the system step-by-step as follows:
     - Run compose: `$ docker-compose --env-file .env.compose up -d --remove-orphans`
         - **FYI**: You can add `--build` on the end of the script to enforce the build in every execution
     - Open on the browser: [http://localhost:8001](http://localhost:8001)
+- Accessing database via PGAdmin
+    - Open PGAdmin in your favorite browser: `http://localhost:5050/`
+    - Use any terminal and get the Internal IP of your deployed posgresql
+        - First, inspect the docker network detail: `$ docker network inspect loginapp_database`
+            - Find `Containers` and locate the IP (=`IPv4Address`) of your `login_postgresdb` service
+                ``` 
+                [
+                    {
+                        "Name": "loginapp_database",
+                        ...
+                        "Containers": {
+                            ...
+                            "a8747105a949cadeeace7f296f112ca3deb60d9ff2e43c4676170c8957de16a9": {
+                                "Name": "login_postgresdb",
+                                "EndpointID": "296a5ba37862f6e8ccc3d5cfdaff957559e3191f0b311d5406e5e161bf950f02",
+                                "MacAddress": "02:42:c0:a8:50:02",
+                                "IPv4Address": "192.168.80.2/20",
+                                "IPv6Address": ""
+                            },
+                            ...
+                        },
+                        ...
+                    }
+                ]
+                ```
+            - In my case, the IP that I am looking for is `192.168.80.2`
+            - Why not `localhost`? Of couse! Since they are communicating privately inside the docker network. ;)
+        - Now, back to the browser and `Add New Server`
+        - In the `General` tab, you can define any name, e.g., `myserver`
+        - Then, go to `Connection` tab, and put following information:
+            - `Hostname/Address` put your `IPv4Address` you found before, which is `192.168.80.2` for my case
+            - `Port` put `5432`; Remember that it uses the **INTERNAL PORT**, not the exposed network, dude. ;)
+            - `Maintainance database` put `default_db`
+            - `Username` put `rDGJeEDqAz`
+            - `Password` put `XsPQhCoEfOQZueDjsILetLDUvbvSxAMnrVtgVZpmdcSssUgbvs`
+        - Finally, press the `Save` button!
+    - **ALTERNATIVE**: As some devs prefer using a terminal, use this commands: 
+        - Connecting to db:`$ psql -h localhost -d default_db -U rDGJeEDqAz -p 5387`
+            - **FYI**: You are accessing the database from outside the terminal, so you use an EXPOSED PORT,
+                which is `5387`.
+        - Then, it will ask for your password, and put `XsPQhCoEfOQZueDjsILetLDUvbvSxAMnrVtgVZpmdcSssUgbvs`
+    

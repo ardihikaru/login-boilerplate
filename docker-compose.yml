@@ -1,6 +1,7 @@
 version: "3.7"
 
-# How to run: `$ docker-compose --env-file .env.compose up --remove-orphans`
+# How to run: `$ docker-compose --env-file .env.compose up --remove-orphans --build`
+# FYI: to avoid always re-building the api-service, you may remove `--build` part
 
 services:
   postgresdb:
@@ -18,24 +19,7 @@ services:
     ports:
       - "${EXPOSED_DEFAULT_DATABASE_PORT}:${DEFAULT_DATABASE_PORT}"
     networks:
-      - database
-
-  test_postgresdb:
-    container_name: login_test_postgresdb
-    restart: unless-stopped
-    image: postgres:12
-#    volumes:
-#      - ./data/test_postgresdb_data/db:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_DB=${TEST_DATABASE_DB}
-      - POSTGRES_USER=${TEST_DATABASE_USER}
-      - POSTGRES_PASSWORD=${TEST_DATABASE_PASSWORD}
-    env_file:
-      - .env.compose
-    ports:
-      - "${EXPOSED_TEST_DATABASE_PORT}:${TEST_DATABASE_PORT}"
-    networks:
-      - database
+      - loginapp_database
 
   pgadmin:
     container_name: login_pgadmin_container
@@ -46,10 +30,12 @@ services:
       PGADMIN_CONFIG_SERVER_MODE: 'False'
 #    volumes:
 #       - ./data/pgadmin:/var/lib/pgadmin
+    depends_on:
+      - postgresdb
     ports:
       - "${PGADMIN_PORT:-5050}:80"
     networks:
-      - database
+      - loginapp_database
     restart: unless-stopped
 
   api_service:
@@ -61,17 +47,18 @@ services:
     restart: always
     depends_on:
       - postgresdb
-      - test_postgresdb
     env_file:
       - .env.compose
     ports:
+      # dockerize api-service exposes port 8001, while the native version will utilize post 8000
+      # in this case, it will allow both services to run on the same time. :)
       - 8001:80
     networks:
       - loginapp
-      - database
+      - loginapp_database
 
 networks:
-  app:
+  loginapp:
     name: loginapp
-  database:
-    name: database
+  loginapp_database:
+    name: loginapp_database

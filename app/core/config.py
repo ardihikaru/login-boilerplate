@@ -90,12 +90,12 @@ class Settings(BaseSettings):
     @validator("TEST_SQLALCHEMY_DATABASE_URI")
     def _assemble_test_db_connection(cls, v: str, values: Dict[str, str]) -> str:
         return AnyUrl.build(
-            scheme="postgresql+asyncpg",
+            scheme="sqlite+aiosqlite",
             user=values["TEST_DATABASE_USER"],
             password=values["TEST_DATABASE_PASSWORD"],
             host=values["TEST_DATABASE_HOSTNAME"],
             port=values["TEST_DATABASE_PORT"],
-            path=f"/{values['TEST_DATABASE_DB']}",
+            path="/:memory:",
         )
 
     class Config:
