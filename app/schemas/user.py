@@ -40,3 +40,9 @@ class UserDummyCreate(BaseUser):
     created_at: str
     updated_at: str
     session_at: str
+
+
+class UserLogout(BaseUser):
+    full_name: Optional[str]
+    email: Optional[str]
+    logout_status: Optional[bool]

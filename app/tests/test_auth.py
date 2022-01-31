@@ -1,7 +1,7 @@
 import pytest
 from httpx import AsyncClient
 
-from app.models import User
+from app.models.user import User
 
 # All test coroutines in file will be treated as marked (async allowed).
 pytestmark = pytest.mark.asyncio
