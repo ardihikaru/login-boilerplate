@@ -64,7 +64,7 @@ services:
       - 6379:6379
     environment:
       - REDIS_REPLICATION_MODE=master
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PASSWORD=${EXT_REDIS_PASSWORD}
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
 #    volumes:
 #      - ./data/redis:/bitnami/redis/data
@@ -81,8 +81,8 @@ services:
       - REDIS_REPLICATION_MODE=slave
       - REDIS_MASTER_HOST=redis-primary.loginapp_database
       - REDIS_MASTER_PORT_NUMBER=6379
-      - REDIS_MASTER_PASSWORD=${REDIS_PASSWORD}
-      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_MASTER_PASSWORD=${EXT_REDIS_PASSWORD}
+      - REDIS_PASSWORD=${EXT_REDIS_PASSWORD}
       - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
     networks:
       - loginapp_database
