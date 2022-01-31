@@ -37,3 +37,6 @@ uvicorn==0.15.0
 zipp==3.6.0; python_version >= "3.6" and python_full_version < "3.0.0" and python_version < "3.8" or python_full_version >= "3.6.0" and python_version < "3.8" and python_version >= "3.6"
 pytest==6.2.5
 pytest-asyncio==0.16.0
+
+# https://github.com/talkpython/web-applications-with-fastapi-course/issues/4
+aiosqlite==0.17.0

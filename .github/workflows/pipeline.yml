@@ -44,10 +44,9 @@ jobs:
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
 
-# Disable the pytest for the time being (will be fixed later on)
-#    - name: Test with pytest
-#      run: |
-#        python -m pytest
+    - name: Test with pytest
+      run: |
+        python -m pytest
 
 # Build and push the Docker image
   push_to_registry:
