@@ -62,7 +62,7 @@ async def main() -> None:
                     email=dummy_user["email"],
                     hashed_password=dummy_user["hashed_password"],
                     total_login=dummy_user["total_login"],
-                    login_by=dummy_user["login_by"],
+                    signup_by=dummy_user["signup_by"],
                     activated=dummy_user["activated"],
                     created_at=dummy_user["created_at"],
                     updated_at=dummy_user["updated_at"],
