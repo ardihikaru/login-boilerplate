@@ -1,3 +1,5 @@
+[![Build Status](https://app.travis-ci.com/ardihikaru/login-boilerplate.svg?branch=main)](https://app.travis-ci.com/ardihikaru/login-boilerplate)
+
 # login-boilerplate
 A complete login application
 - Docker image: [https://hub.docker.com/repository/docker/ardihikaru/login-boilerplate](https://hub.docker.com/repository/docker/ardihikaru/login-boilerplate)
