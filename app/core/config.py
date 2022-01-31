@@ -50,19 +50,23 @@ class Settings(BaseSettings):
     DESCRIPTION: str = pyproject_content["description"]
 
     # POSTGRESQL DEFAULT DATABASE
+    DEFAULT_DATABASE_SCHEMA: str
     DEFAULT_DATABASE_HOSTNAME: str
     DEFAULT_DATABASE_USER: str
     DEFAULT_DATABASE_PASSWORD: str
     DEFAULT_DATABASE_PORT: str
     DEFAULT_DATABASE_DB: str
+    DEFAULT_DATABASE_PATH: str
     DEFAULT_SQLALCHEMY_DATABASE_URI: str = ""
 
     # POSTGRESQL TEST DATABASE
+    TEST_DATABASE_SCHEMA: str
     TEST_DATABASE_HOSTNAME: str
     TEST_DATABASE_USER: str
     TEST_DATABASE_PASSWORD: str
     TEST_DATABASE_PORT: str
     TEST_DATABASE_DB: str
+    TEST_DATABASE_PATH: str
     TEST_SQLALCHEMY_DATABASE_URI: str = ""
 
     # FIRST SUPERUSER
@@ -79,23 +83,23 @@ class Settings(BaseSettings):
     @validator("DEFAULT_SQLALCHEMY_DATABASE_URI")
     def _assemble_default_db_connection(cls, v: str, values: Dict[str, str]) -> str:
         return AnyUrl.build(
-            scheme="postgresql+asyncpg",
+            scheme=values["DEFAULT_DATABASE_SCHEMA"],
             user=values["DEFAULT_DATABASE_USER"],
             password=values["DEFAULT_DATABASE_PASSWORD"],
             host=values["DEFAULT_DATABASE_HOSTNAME"],
             port=values["DEFAULT_DATABASE_PORT"],
-            path=f"/{values['DEFAULT_DATABASE_DB']}",
+            path=f"/{values['DEFAULT_DATABASE_PATH']}",
         )
 
     @validator("TEST_SQLALCHEMY_DATABASE_URI")
     def _assemble_test_db_connection(cls, v: str, values: Dict[str, str]) -> str:
         return AnyUrl.build(
-            scheme="sqlite+aiosqlite",
+            scheme=values["TEST_DATABASE_SCHEMA"],
             user=values["TEST_DATABASE_USER"],
             password=values["TEST_DATABASE_PASSWORD"],
             host=values["TEST_DATABASE_HOSTNAME"],
             port=values["TEST_DATABASE_PORT"],
-            path="/:memory:",
+            path=f"/{values['DEFAULT_DATABASE_PATH']}",
         )
 
     class Config:
