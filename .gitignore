@@ -2,6 +2,12 @@
 .idea
 data/*
 !data/.gitkeep
+app/scripts/users/dummy_users.json
+
+# ignores all auto-generated python files to avoid issue in the future
+# when any version is generated, it should be added by force
+!alembic/versions/.gitkeep
+alembic/versions
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
