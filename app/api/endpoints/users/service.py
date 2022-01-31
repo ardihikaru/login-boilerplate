@@ -1,6 +1,5 @@
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.api import deps
 from app.models.user import User
 from sqlalchemy.exc import IntegrityError
 from app.core.utils import get_pgsql_integrity_error_msg
@@ -12,8 +11,8 @@ L = logging.getLogger("uvicorn.error")
 
 async def insert(
     user: User,
-    session: AsyncSession = Depends(deps.get_session),
-):
+    session: AsyncSession,
+) -> None:
     try:
         session.add(user)
         await session.commit()

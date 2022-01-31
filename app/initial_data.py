@@ -47,11 +47,11 @@ async def main() -> None:
 
         # check if it enforces to create dummy users or not
         # also make sure that the dummy data generation should be performed ONCE!
-        if bool(strtobool(settings.ADD_DUMMY_USERS)) and total_users > settings.TOTAL_DUMMY_USERS:
+        if settings.ADD_DUMMY_USERS and total_users > settings.TOTAL_DUMMY_USERS:
             print("Dummy data have been generated. Nothing to do.")
 
         # otherwise, try creating some dummy users
-        elif bool(strtobool(settings.ADD_DUMMY_USERS)) and total_users < settings.TOTAL_DUMMY_USERS:
+        elif settings.ADD_DUMMY_USERS and total_users < settings.TOTAL_DUMMY_USERS:
             generator = DummyUserDataGenerator(settings.TOTAL_DUMMY_USERS)
             generator.run()
             dummy_users = generator.get_dummy_users()

@@ -24,20 +24,22 @@ from typing import Dict, List, Union
 
 import toml
 from pydantic import AnyHttpUrl, AnyUrl, BaseSettings, EmailStr, validator
+from typing import Literal
 
-# Literal from typing_extensions for python 3.7 support, remove if not needed
-try:
-    from typing import Literal
-except ImportError:
-    from typing_extensions import Literal
-#
-
-PROJECT_DIR = Path(__file__).parent.parent.parent
+PROJECT_DIR = Path(__file__).parent.parent.parent.parent
 pyproject_content = toml.load(f"{PROJECT_DIR}/pyproject.toml")["tool"]["poetry"]
 
 
 class Settings(BaseSettings):
+    """Application configuration model definition.
+
+    // TBD
+
+    """
+
+
     # CORE SETTINGS
+    DEBUG: bool = False
     SECRET_KEY: str
     ENVIRONMENT: Literal["DEV", "PYTEST", "STAGE", "PRODUCTION"]
     ACCESS_TOKEN_EXPIRE_MINUTES: int
@@ -74,7 +76,7 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER_PASSWORD: str
 
     # EXTRA DATASET
-    ADD_DUMMY_USERS: str
+    ADD_DUMMY_USERS: bool = False
     TOTAL_DUMMY_USERS: int
 
     # VALIDATORS
@@ -103,7 +105,7 @@ class Settings(BaseSettings):
             password=values["TEST_DATABASE_PASSWORD"],
             host=values["TEST_DATABASE_HOSTNAME"],
             port=values["TEST_DATABASE_PORT"],
-            path=f"/{values['DEFAULT_DATABASE_PATH']}",
+            path=f"/{values['TEST_DATABASE_PATH']}",
         )
 
     class Config:

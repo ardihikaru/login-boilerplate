@@ -57,6 +57,36 @@ services:
       - loginapp
       - loginapp_database
 
+  # Ref: https://github.com/bitnami/bitnami-docker-redis/blob/master/docker-compose-replicaset.yml
+  redis-primary:
+    image: docker.io/bitnami/redis:6.2
+    ports:
+      - 6379:6379
+    environment:
+      - REDIS_REPLICATION_MODE=master
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+#    volumes:
+#      - ./data/redis:/bitnami/redis/data
+    networks:
+      - loginapp_database
+
+  redis-secondary:
+    image: docker.io/bitnami/redis:6.2
+#    ports:
+#      - 6380:6379
+    depends_on:
+      - redis-primary
+    environment:
+      - REDIS_REPLICATION_MODE=slave
+      - REDIS_MASTER_HOST=redis-primary.loginapp_database
+      - REDIS_MASTER_PORT_NUMBER=6379
+      - REDIS_MASTER_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+      - REDIS_DISABLE_COMMANDS=FLUSHDB,FLUSHALL
+    networks:
+      - loginapp_database
+
 networks:
   loginapp:
     name: loginapp
