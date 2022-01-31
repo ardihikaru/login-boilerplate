@@ -4,7 +4,7 @@ import json
 import random
 from app.core.security import get_password_hash
 from app.schemas.user import UserDummyCreate
-from app.models.user import LoginBy
+from app.models.user import SignupBy
 from typing import Dict
 from pydantic import BaseModel
 import names
@@ -21,10 +21,10 @@ class DummyUserDataGenerator:
 		self.path = export_path
 
 		# setup login type
-		self.login_type = [
-			LoginBy.EMAIL.value,
-			LoginBy.FACEBOOK.value,
-			LoginBy.GMAIL.value,
+		self.signup_type = [
+			SignupBy.EMAIL.value,
+			SignupBy.FACEBOOK.value,
+			SignupBy.GMAIL.value,
 		]
 
 		self.dummy_users = []
@@ -50,9 +50,9 @@ class DummyUserDataGenerator:
 			to_datetime_again = datetime.combine(start_of_week, today_time)
 
 			# generate variable values
-			login_by = self.login_type[random.randint(0, 2)]  # get login type by index
+			signup_by = self.signup_type[random.randint(0, 2)]  # get login type by index
 			# if login by Email, randomize the activation status between True or False
-			activated = bool(random.randint(0, 1)) if login_by == LoginBy.EMAIL.value else False
+			activated = bool(random.randint(0, 1)) if signup_by == SignupBy.EMAIL.value else True
 
 			# generate a random user detailed information based on the generate random name
 			user = {
@@ -60,7 +60,7 @@ class DummyUserDataGenerator:
 				"email": "{}@gmail.com".format(rand_full_name.replace(" ", ".")),
 				"hashed_password": get_password_hash(rand_full_name),
 				"total_login": random.randint(0, 60),
-				"login_by": login_by,
+				"signup_by": signup_by,
 				"activated": activated,
 				"created_at": to_datetime_again,
 				"updated_at": to_datetime_again,

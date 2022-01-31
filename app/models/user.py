@@ -13,10 +13,17 @@ from enum import Enum
 Base = cast(Any, declarative_base())
 
 
-class LoginBy(Enum):
+class SignupBy(Enum):
     EMAIL = "EMAIL"
     FACEBOOK = "FACEBOOK"
     GMAIL = "GMAIL"
+
+
+signup_by_list = frozenset([
+    SignupBy.EMAIL.value,
+    SignupBy.FACEBOOK.value,
+    SignupBy.GMAIL.value,
+])
 
 
 class User(Base):
@@ -27,7 +34,7 @@ class User(Base):
     hashed_password = Column(String(128), nullable=False)
     total_login = Column(Integer, nullable=False, default=0)
     activated = Column(Boolean(), nullable=False, default=False)
-    login_by = Column(String(50), nullable=False, default=LoginBy.EMAIL.value)
+    signup_by = Column(String(50), nullable=False, default=SignupBy.EMAIL.value)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, nullable=False, default=datetime.utcnow, onupdate=datetime.utcnow)
     session_at = Column(DateTime, nullable=False, default=datetime.utcnow)

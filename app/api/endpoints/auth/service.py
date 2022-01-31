@@ -10,6 +10,7 @@ from app.core import security
 from app.core.config import settings
 from app.models.user import User
 from app.utils import RedisClient
+from datetime import datetime
 
 L = logging.getLogger("uvicorn.error")
 
@@ -37,6 +38,7 @@ async def update_login_counter(
 		user.total_login = 1
 	else:
 		user.total_login += 1
+		user.session_at = datetime.utcnow()
 
 	session.add(user)
 	await session.commit()
