@@ -11,7 +11,7 @@ from app import schemas
 from app.api import deps
 from app.core import security
 from app.core.config import settings
-from app.models import User
+from app.models.user import User
 
 router = APIRouter()
 

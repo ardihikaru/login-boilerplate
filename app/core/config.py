@@ -73,6 +73,10 @@ class Settings(BaseSettings):
     FIRST_SUPERUSER_EMAIL: EmailStr
     FIRST_SUPERUSER_PASSWORD: str
 
+    # EXTRA DATASET
+    ADD_DUMMY_USERS: str
+    TOTAL_DUMMY_USERS: int
+
     # VALIDATORS
     @validator("BACKEND_CORS_ORIGINS")
     def _assemble_cors_origins(cls, cors_origins: Union[str, List[AnyHttpUrl]]):

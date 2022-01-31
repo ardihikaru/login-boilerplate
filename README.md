@@ -104,3 +104,6 @@ I will implement the system step-by-step as follows:
                 which is `5387`.
         - Then, it will ask for your password, and put `XsPQhCoEfOQZueDjsILetLDUvbvSxAMnrVtgVZpmdcSssUgbvs`
     
+## MISC
+- Database:
+    - Truncate `user` table: `# TRUNCATE TABLE public.user;`

@@ -1,7 +1,8 @@
 from fastapi import APIRouter, Depends, Request
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app import models, schemas
+from app import schemas
+from app.models import user as models
 from app.api import deps
 from app.api.endpoints.users.service import insert
 from app.core.security import get_password_hash

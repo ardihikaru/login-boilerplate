@@ -1,7 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.api import deps
-from app.models import User
+from app.models.user import User
 from sqlalchemy.exc import IntegrityError
 from app.core.utils import get_pgsql_integrity_error_msg
 from app.exceptions import ErrorMessage
