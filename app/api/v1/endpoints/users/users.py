@@ -3,10 +3,10 @@ from fastapi import (
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app import schemas
-from app.models import user as models
+from app.db import schemas
+from app.db.models import user as models
 from app.api import deps
-from app.api.endpoints.users.service import insert, get_all_users
+from app.api.v1.endpoints.users.service import insert, get_all_users
 from app.core.security import get_password_hash
 from starlette.responses import RedirectResponse
 from app.exceptions import ErrorMessage

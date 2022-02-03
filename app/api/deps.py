@@ -7,11 +7,11 @@ from pydantic import ValidationError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app import schemas
+from app.db import schemas
 from app.core import security
 from app.core.config import settings
-from app.models.user import User
-from app.session import async_session
+from app.db.models.user import User
+from app.db.session import async_session
 from app.utils import RedisClient
 
 reusable_oauth2 = OAuth2PasswordBearer(tokenUrl="auth/access-token")

@@ -3,7 +3,7 @@ from typing import Optional, List
 from fastapi import Query, Form
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
-from app.models.user import SignupBy, signup_by_list
+from app.db.models.user import SignupBy, signup_by_list
 
 
 class BaseUser(BaseModel):

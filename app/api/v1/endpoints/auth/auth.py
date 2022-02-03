@@ -7,12 +7,12 @@ from pydantic import ValidationError
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app import schemas
+from app.db import schemas
 from app.api import deps
 from app.core import security
 from app.core.config import settings
-from app.models.user import User
-from app.api.endpoints.auth.service import (
+from app.db.models.user import User
+from app.api.v1.endpoints.auth.service import (
     validate_user, update_login_counter, store_tokens, revoke_tokens, valid_refresh_token
 )
 

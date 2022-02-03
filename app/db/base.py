@@ -10,4 +10,4 @@ from sqlalchemy.orm import declarative_base
 Base = cast(Any, declarative_base())
 
 # Import all the models, so that Base has them before being called
-from app.models.user import User
+from app.db.models.user import User
