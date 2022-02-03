@@ -9,8 +9,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.core.security import get_password_hash
 from app.main import app
-from app.models.user import User, Base
-from app.session import async_engine, async_session
+from app.db.models.user import User, Base
+from app.db.session import async_engine, async_session
 
 
 @pytest.fixture(scope="session")

@@ -12,8 +12,8 @@ from sqlalchemy import select, func
 
 from app.core import security
 from app.core.config import settings
-from app.models.user import User
-from app.session import async_session
+from app.db.models.user import User
+from app.db.session import async_session
 from app.scripts.users.generator import DummyUserDataGenerator
 from distutils.util import strtobool
 

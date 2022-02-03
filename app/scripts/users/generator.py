@@ -3,8 +3,8 @@
 import json
 import random
 from app.core.security import get_password_hash
-from app.schemas.user import UserDummyCreate
-from app.models.user import SignupBy
+from app.db.schemas.user.user import UserDummyCreate
+from app.db.models.user import SignupBy
 from typing import Dict
 from pydantic import BaseModel
 import names

@@ -8,7 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.core import security
 from app.core.config import settings
-from app.models.user import User
+from app.db.models.user import User
 from app.utils import RedisClient
 from datetime import datetime
 
