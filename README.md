@@ -203,3 +203,7 @@ I will implement the system step-by-step as follows:
         ``` 
         cd shielded-lowlands-46380
         ```
+    - Tailing the log:
+        ``` 
+        heroku logs --tail
+        ```
