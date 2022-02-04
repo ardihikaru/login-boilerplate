@@ -75,4 +75,3 @@ app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # add session middleware
 app.add_middleware(SessionMiddleware, secret_key=settings.SECRET_KEY)
-

@@ -1,5 +1,4 @@
 import asyncio
-from typing import Generator
 import logging
 from enum import Enum
 

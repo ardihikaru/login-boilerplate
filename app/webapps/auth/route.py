@@ -3,19 +3,21 @@ from fastapi import Request, APIRouter, Depends, Form, status
 from fastapi.templating import Jinja2Templates
 from app.db import schemas
 from app.webapps import deps
-from app.db.models.user import User
+from app.db.models.user import User, SignupBy
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.webapps.auth.service import (
 	validate_login, get_user, generate_email_verification_request_uri, activate_account,
-	generate_email_verification_uri, validate_signup, save_new_user
+	generate_email_verification_uri, validate_signup, save_new_user, save_session_and_wait,
+	save_and_load_user
 )
 from app.core.security import get_email_by_verification_token
 from starlette.responses import RedirectResponse
+from app.utils.common import get_root_url
+from app.utils.social_login.facebook import FacebookLogin
 from app.core.config import settings
 import logging
 
 L = logging.getLogger("uvicorn.error")
-
 
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(include_in_schema=False)
@@ -66,10 +68,11 @@ async def login_web_post(
 
 	# if invalid, send an error to the login page
 	if err_msg is not None:
-		return templates.TemplateResponse("auth/login.html", context={"request": request, "err_msg": err_msg, "evlink": evlink})
+		return templates.TemplateResponse("auth/login.html",
+										  context={"request": request, "err_msg": err_msg, "evlink": evlink})
 
 	# if there is no issue, save the session
-	await deps.save_session(user, request, session)
+	await save_session_and_wait(user, request, session)
 
 	# redirect to the dashboard
 	redirect_uri = request.url_for('dashboard')
@@ -154,7 +157,7 @@ async def request_verification_email(
 	if user is None:
 		err_msg = "User not found."
 		return templates.TemplateResponse("auth/login.html",
-									  context={"request": request, "err_msg": err_msg, "evlink": None})
+										  context={"request": request, "err_msg": err_msg, "evlink": None})
 
 	# if user exist, inform a link to verify
 	success_msg = "You verification email has been send to your email."
@@ -163,6 +166,7 @@ async def request_verification_email(
 	# TODO: Compose an email via Email Publisher Service
 
 	return templates.TemplateResponse("auth/login.html", context={"request": request, "success_msg": success_msg})
+
 
 @router.get("/verify")
 async def verify_email(
@@ -221,3 +225,45 @@ async def logout_web(
 
 	redirect_uri = request.url_for('dashboard')
 	return RedirectResponse(url=redirect_uri, status_code=status.HTTP_302_FOUND)
+
+
+@router.get('/login_facebook')
+async def login_facebook(request: Request):
+	# Create facebook session
+	facebook = FacebookLogin(request)
+	await facebook.oauth2connect()
+
+	authorization_url = await facebook.get_auth_url()
+
+	return RedirectResponse(url=authorization_url, status_code=status.HTTP_302_FOUND)
+
+
+@router.get('/fb-callback')
+async def login_facebook_callback(
+		request: Request,
+		session: AsyncSession = Depends(deps.get_session),
+):
+	# Create facebook session
+	facebook = FacebookLogin(request)
+	await facebook.oauth2connect(apply_fix=True)
+
+	user_info = await facebook.get_token_and_wait()
+
+	# TODO: What happen when there is no response from facebook?
+	if user_info is None:
+		pass
+
+	social_login_id = user_info["id"]  # use it as an identifier; for now, use it as the password
+	email = user_info["email"]
+	name = user_info["name"]
+
+	# check email on the database
+	# if not found, add this user into the database
+	user = await save_and_load_user(session, email, name, social_login_id, SignupBy.FACEBOOK.value)
+
+	# save session
+	await save_session_and_wait(user, request, session)
+
+	# https://stackoverflow.com/questions/62119138/how-to-do-a-post-redirect-get-prg-in-fastapi
+	# https://httpstatuses.com/302 -> To enforce from POST (source URL) to GET (target URL)
+	return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)

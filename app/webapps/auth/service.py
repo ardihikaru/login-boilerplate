@@ -7,6 +7,7 @@ from app.db.models import user as models
 from app.db.models.user import SignupBy, User
 from app.db.adapters.user.user import insert
 from app.core.security import verify_password, create_email_verification_token
+from app.db.adapters.user.user import update_session_login
 from app.utils.common import get_root_url
 from app.utils.password_validator import PasswordValidator
 from app.core.security import get_password_hash
@@ -164,3 +165,44 @@ async def save_new_user(session: AsyncSession, full_name: str, email: str, passw
 
 	# insert to db
 	await insert(new_user, session)
+
+
+async def save_and_load_user(session: AsyncSession, email: str, full_name: str,
+							 social_login_id: str, signup_by: str) -> User:
+	# get user by email
+	user = await get_user(session, email)
+
+	# if not found, create user whis this credentials
+	if user is None:
+		# create a hash password
+		hashed_password = get_password_hash(social_login_id)  # use this social login ID as a password
+
+		# build user model
+		new_user = models.User(
+			full_name=full_name, email=email, hashed_password=hashed_password, signup_by=signup_by
+		)
+
+		# insert to db
+		await insert(new_user, session)
+
+		# return a newly updated user information
+		return new_user
+
+	return user
+
+async def save_session_and_wait(user: User, request: Request, session: AsyncSession) -> None:
+	""" Save current valid user information into the session
+
+	:param user:
+	:param request:
+	:return: None
+	"""
+
+	# Set new session for this user
+	request.session['user'] = {
+		"email": user.email,
+		"full_name": user.full_name,
+	}
+
+	# Update total login and last active session
+	await update_session_login(user, session)
