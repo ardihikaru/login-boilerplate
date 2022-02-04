@@ -5,8 +5,9 @@ from app.db import schemas
 from app.webapps import deps
 from app.db.models.user import User, SignupBy
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.webapps.user.service import get_user
 from app.webapps.auth.service import (
-	validate_login, get_user, generate_email_verification_request_uri, activate_account,
+	validate_login, generate_email_verification_request_uri, activate_account,
 	generate_email_verification_uri, validate_signup, save_new_user, save_session_and_wait,
 	save_and_load_user
 )
