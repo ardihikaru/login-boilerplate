@@ -34,7 +34,7 @@ Dashboard Page
                         <div class="col-sm-8">
                             <div class="detail">
                                 <p class="detail-subtitle">Registered Users</p>
-                                <span class="number">6,267</span>
+                                <span class="number">{{ statistics.total_users }}</span>
                             </div>
                         </div>
                     </div>
@@ -59,7 +59,7 @@ Dashboard Page
                         <div class="col-sm-8">
                             <div class="detail">
                                 <p class="detail-subtitle">Active Users</p>
-                                <span class="number">234</span>
+                                <span class="number">{{ statistics.total_session_today }}</span>
                             </div>
                         </div>
                     </div>
@@ -84,7 +84,7 @@ Dashboard Page
                         <div class="col-sm-8">
                             <div class="detail">
                                 <p class="detail-subtitle">Average Active Users</p>
-                                <span class="number">123</span>
+                                <span class="number">{{ statistics.total_session_7days }}</span>
                             </div>
                         </div>
                     </div>
@@ -108,8 +108,8 @@ Dashboard Page
                         </div>
                         <div class="col-sm-8">
                             <div class="detail">
-                                <p class="detail-subtitle">Unverified Users</p>
-                                <span class="number">11</span>
+                                <p class="detail-subtitle">Unverified Accounts</p>
+                                <span class="number">{{ statistics.total_unver_acc_tmonth }}</span>
                             </div>
                         </div>
                     </div>
@@ -159,83 +159,38 @@ Dashboard Page
                 <div class="content">
                     <div class="head">
                         <h5 class="mb-0">Registered users</h5>
-                        <p class="text-muted">Last 10 data</p>
+                        <p class="text-muted">Last 5 data</p>
                     </div>
                     <div class="canvas-wrapper">
                         <table class="table table-striped">
                             <thead class="success">
+
                             <tr>
                                 <th>Email</th>
-                                <th>Fullname</th>
+                                <th>Registered by</th>
                                 <th>Registration Date</th>
                                 <th class="text-end">Status</th>
                             </tr>
                             </thead>
                             <tbody>
+                            {% for user in users %}
                             <tr>
-                                <td>ardi@ardi.com</td>
-                                <td>Ardi</td>
-                                <td>Today</td>
-                                <td class="text-end text-success"><b>ACTIVATED</b></td>
+                                <th>{{ user.email }}</th>
+                                <th>{{ user.signup_by }}</th>
+                                <th>{{ user.created_at }}</th>
+                                <th>
+                                    {% if user.activated is true %}
+                                    <b class="text-end text-success">ACTIVATED</b>
+                                    {% else %}
+                                    <b class="text-end text-danger">INACTIVE</b>
+                                    {% endif %}
+                                </th>
                             </tr>
-                            <tr>
-                                <td>kucing@ardi.com</td>
-                                <td>Kucing</td>
-                                <td>Yesterday</td>
-                                <td class="text-end text-danger"><b>INACTIVE</b></td>
-                            </tr>
-                            <tr>
-                                <td>ardi@ardi.com</td>
-                                <td>Kucing</td>
-                                <td>10 Jan 2022</td>
-                                <td class="text-end text-success"><b>ACTIVATED</b></td>
-                            </tr>
-                            <tr>
-                                <td>kucing@ardi.com</td>
-                                <td>Kucing</td>
-                                <td>Today</td>
-                                <td class="text-end text-danger"><b>INACTIVE</b></td>
-                            </tr>
-                            <tr>
-                                <td>ardi@ardi.com</td>
-                                <td>Ardi</td>
-                                <td>10 Jan 2022</td>
-                                <td class="text-end text-success"><b>ACTIVATED</b></td>
-                            </tr>
-                            <tr>
-                                <td>kucing@ardi.com</td>
-                                <td>Kucing</td>
-                                <td>Today</td>
-                                <td class="text-end text-danger"><b>INACTIVE</b></td>
-                            </tr>
-                            <tr>
-                                <td>ardi@ardi.com</td>
-                                <td>Ardi</td>
-                                <td>10 Jan 2022</td>
-                                <td class="text-end text-success"><b>ACTIVATED</b></td>
-                            </tr>
-                            <tr>
-                                <td>kucing@ardi.com</td>
-                                <td>Kucing</td>
-                                <td>22 Jan 2022</td>
-                                <td class="text-end text-danger"><b>INACTIVE</b></td>
-                            </tr>
-                            <tr>
-                                <td>ardi@ardi.com</td>
-                                <td>Ardi</td>
-                                <td>Today</td>
-                                <td class="text-end text-success"><b>ACTIVATED</b></td>
-                            </tr>
-                            <tr>
-                                <td>kucing@ardi.com</td>
-                                <td>Kucing</td>
-                                <td>10 Feb 2022</td>
-                                <td class="text-end text-danger"><b>INACTIVE</b></td>
-                            </tr>
+                            {% endfor %}
                             </tbody>
                         </table>
 
-                        <p align="center"><a href="#" class="text-capitalize text-info"><b>See all users ...</b></a></p>
+                        <p align="center"><a href="/users" class="text-capitalize text-info"><b>See all users ...</b></a></p>
                     </div>
                 </div>
             </div>
