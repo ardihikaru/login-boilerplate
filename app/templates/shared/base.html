@@ -1,0 +1,38 @@
+<!doctype html>
+<!--
+* Bootstrap Simple Admin Template
+* Version: 2.1
+* Author: Alexis Luna
+* Website: https://github.com/alexis-luna/bootstrap-simple-admin-template
+-->
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>
+        {% block title %}
+        {% endblock %}
+    </title>
+
+    <link href="{{ url_for('static', path='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
+    {% block extra_header %}
+    {% endblock %}
+
+</head>
+
+<body>
+<div class="wrapper">
+    <!-- All content goes here -->
+    {% block content %}
+    {% endblock %}
+</div>
+<script src="{{ url_for('static', path='assets/vendor/jquery/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', path='assets/vendor/bootstrap/js/bootstrap.min.js') }}"></script>
+
+{% block extra_scripts %}
+{% endblock %}
+
+</body>
+</html>

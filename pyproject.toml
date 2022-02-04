@@ -1,8 +1,8 @@
 [tool.poetry]
-name = "fapi1"
+name = "Login Boilerplate"
 version = "0.1.0-alpha"
-description = "FastAPI project generated using minimal-fastapi-postgres-template."
-authors = ["admin <admin@example.com>"]
+description = "Login Boilerplate based on FastAPI framework."
+authors = ["Muhammad Febrian Ardiansyah <ardihikaru3@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"

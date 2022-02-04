@@ -2,7 +2,7 @@
 
 # login-boilerplate
 A complete login application
-- Docker image: [https://hub.docker.com/repository/docker/ardihikaru/login-boilerplate](https://hub.docker.com/repository/docker/ardihikaru/login-boilerplate)
+- DockerHub image: [login-boilerplate](https://hub.docker.com/repository/docker/ardihikaru/login-boilerplate)
 
 ## Requirements
 - Python >= v3.8
@@ -10,9 +10,15 @@ A complete login application
 
 ## Github projects
 There will be three github projects for this Login App:
-- [Api Service](https://github.com/ardihikaru/login-boilerplate) (This repo)
+- [Api Service](https://github.com/ardihikaru/login-boilerplate) (This repository)
 - Email Publisher (TBD)
+    - For the initial phase, it uses a internal class to demonstrate the complete logic (In this repo @ `app/utils/email_publisher.py`)
 - ReactJS App for Frontend (TBD)
+    - For the initial phase, it adopts [Bootstrap-Simple-Admin-Template](https://github.com/alexis-luna/bootstrap-simple-admin-template) 
+        to demonstrate the complete logic (In this repo @ `app/webapps`)
+        - FYI: it is also a good practice to implement how we differenciate between exposed endpoints
+            used for APIs and disclosed endpoints used for web apps (with [Jinja](https://jinja.palletsprojects.com/en/3.0.x/)
+    - In the future, I plan to build an independent project with [React-Admin from Marmelab](https://github.com/marmelab/react-admin)
     
 ## Architecture design
 - Initial architecture design to implement the Login Application
@@ -33,19 +39,51 @@ I will implement the system step-by-step as follows:
 ## How to use
 - Local Deployment (Tested with **Ubuntu 20.04**)
     - Prepare the environment for local deployment:
-        - Install `venv`: `$ sudo apt-get install python3-venv`
-        - Create python environment: `$ python3 -m venv venv`
-        - Activate: `$ . venv/bin/activate` or `$ . venv/bin/activate.fish` (for [Fish Shell](https://github.com/fish-shell/fish-shell))
-        - Upgrade pip: `$ pip install --upgrade pip`
-        - Install `poetry`: `$ pip install poetry`
-        - Install all requirements with poetry: `$ poetry install`
-        - Alembic initialization (**OPTIONAL**): `$ alembic revision --autogenerate -m "initialization"`
+        - Install `venv`:
+            ``` 
+            sudo apt-get install python3-venv
+            ```
+        - Create python environment:
+            ``` 
+            python3 -m venv venv
+            ```
+        - Activate: 
+            - Bash Shell:
+                ``` 
+                . venv/bin/activate
+                ```
+            - [Fish Shell](https://github.com/fish-shell/fish-shell):
+                ``` 
+                . venv/bin/activate.fish
+                ```
+        - Upgrade pip:
+            ``` 
+            pip install --upgrade pip
+            ```
+        - Install `poetry`:
+            ``` 
+            pip install poetry
+            ```
+        - Install all requirements with poetry:
+            ``` 
+            poetry install
+            ```
+        - Alembic initialization (**OPTIONAL**):
+            ``` 
+            alembic revision --autogenerate -m "initialization"
+            ```
             - This script will create a python file in `alembic/versions/*.py`
             - **FYI**: By default. I have prepared the file `2022_01_28_1243_initialization__868253e3f0c7.py`
                 inside the `alembic/versions`.
         - Once this file generates we are ready for database migration,
-            Run following command: `$ alembic upgrade head`
-        - Run initialized data `$ bash init.sh`
+            Run following command:
+            ``` 
+            alembic upgrade head
+            ```
+        - Run initialized data
+            ``` 
+            bash init.sh
+            ```
             - This will create a superuser data that can be used to login.
             - Created user: 
                 ```
@@ -53,13 +91,25 @@ I will implement the system step-by-step as follows:
                 pass  = OdLknKQJMUwuhpAVHvRC 
                 ```
         - Now, you are ready to run the service. :)
-    - Run the database with compose: `$ docker-compose -f docker-compose-db-only.yml --env-file .env.compose up -d --remove-orphans`
+    - Run the database with compose:
+        ``` 
+        docker-compose -f docker-compose-db-only.yml --env-file .env.compose up -d --remove-orphans
+        ```
         - Here I use a docker-compose for the database to simplify the deployment. :)
-        - To stop, run: `$ docker-compose -f docker-compose-db-only.yml --env-file .env.compose down`
-    - Run api-service: `$ uvicorn app.main:app --reload`
+    - To stop, run:
+        ``` 
+        docker-compose -f docker-compose-db-only.yml --env-file .env.compose down
+        ```
+    - Run api-service:
+        ``` 
+        uvicorn app.main:app --reload
+        ```
     - Open on the browser: [http://localhost:8000](http://localhost:8000)
 - Docker-compose
-    - Run compose: `$ docker-compose --env-file .env.compose up -d --remove-orphans`
+    - Run compose:
+        ``` 
+        docker-compose --env-file .env.compose up -d --remove-orphans
+        ```
         - **FYI**: You can add `--build` on the end of the script to enforce the build in every execution
     - Open on the browser: [http://localhost:8001](http://localhost:8001)
 - Accessing database via PGAdmin
@@ -103,7 +153,53 @@ I will implement the system step-by-step as follows:
             - **FYI**: You are accessing the database from outside the terminal, so you use an EXPOSED PORT,
                 which is `5387`.
         - Then, it will ask for your password, and put `XsPQhCoEfOQZueDjsILetLDUvbvSxAMnrVtgVZpmdcSssUgbvs`
-    
+
+## Credited to:
+1. [Tiangolo](https://github.com/tiangolo) for the awesome FastAPI framework!
+2. [Rafsaf](https://github.com/rafsaf/minimal-fastapi-postgres-template) for the effort to in simplifying the official's
+    boilerplate!
+3. [Alexis Luna](https://github.com/alexis-luna/bootstrap-simple-admin-template) for the simple yet beautiful admin template!
+4. [Fontawesome](https://fontawesome.com/v5.15/icons/facebook?style=brands) for your awesomeness!
+
 ## MISC
 - Database:
-    - Truncate `user` table: `# TRUNCATE TABLE public.user;`
+    - Login with terminal:
+        ``` 
+        psql -h <ip_or_domain> -d <db_name> -U <user> -p <port>
+        ```
+    - Truncate `user` table (after logging in):
+        ``` 
+        TRUNCATE TABLE public.user;
+        ```
+- Docker and Docker-compose
+    ``` 
+    sudo apt install docker.io && sudo apt install docker-compose
+    ```
+- Redis:
+    - Terminal: 
+        - Login to redis:
+            ``` 
+            redis-cli -h <ip_or_domain> -p 6379
+            ```
+        - Auth password: `<ip_or_domain>:6379> AUTH <password>`
+- Heroku:
+    - Login:
+        ``` 
+        heroku login
+        ```
+    - Create a new repo:
+        ``` 
+        heroku create      
+        ```
+        - You will get an output like these:
+            ```
+             ›   Warning: heroku update available from 7.59.1 to 7.59.2.
+            Creating app... done, ⬢ shielded-lowlands-46380
+            https://shielded-lowlands-46380.herokuapp.com/ | https://git.heroku.com/shielded-lowlands-46380.git
+            ```
+        - In this case you have created a repo `https://git.heroku.com/shielded-lowlands-46380.git`
+    - Clone repo locally: `$ git clone https://git.heroku.com/shielded-lowlands-46380.git`
+    - Go to the project directory:
+        ``` 
+        cd shielded-lowlands-46380
+        ```
