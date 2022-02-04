@@ -1,0 +1,52 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+Login Page
+{% endblock %}
+
+{% block extra_header %}
+<link href="{{ url_for('static', path='assets/css/auth.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="auth-content">
+    <div class="card">
+        <div class="card-body text-center">
+            <div class="mb-4">
+                <img class="brand"
+                     src="{{ url_for('static', path='assets/img/logo-horizontal.png') }}"
+                     alt="bootstraper logo"
+                     width="300"
+                >
+            </div>
+            <h5 class="mb-4 text-muted">Register a new account</h5>
+
+            {% if err_msg is defined %}
+                {% if err_msg is not none %}
+                <h6 class="alert alert-danger">{{ err_msg }}</h6>
+                {% endif %}
+            {% endif %}
+
+            <form action="/signup" method="POST">
+                <div class="mb-3 text-start">
+                    <label for="email" class="form-label">Fullname</label>
+                    <input type="full_name" name="full_name" class="form-control" placeholder="Enter Fullname" required>
+                </div>
+                <div class="mb-3 text-start">
+                    <label for="email" class="form-label">Email adress</label>
+                    <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
+                </div>
+                <div class="mb-3 text-start">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                </div>
+                <button class="btn btn-primary shadow-2 mb-lg-2">Signup Now</button>
+
+                <br/>
+
+            </form>
+            <p class="mb-0 text-muted">Already have an account? <a href="/login">Login now</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
