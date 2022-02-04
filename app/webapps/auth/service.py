@@ -1,5 +1,6 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.adapters.user.user import get_user_by_email, update_activation_status
+from app.webapps.user.service import get_user
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from typing import Optional
@@ -16,17 +17,6 @@ import logging
 L = logging.getLogger("uvicorn.error")
 
 templates = Jinja2Templates(directory="app/templates")
-
-
-async def get_user(session: AsyncSession, email: str) -> Optional[User]:
-	""" Get one user record by a given mail
-
-	:param session:
-	:param email:
-	:return:
-	"""
-	# get record by email
-	return await get_user_by_email(session, email)
 
 
 async def validate_login(user: User, password: str, request: Request) -> (str, str):

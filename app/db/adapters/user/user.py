@@ -155,3 +155,12 @@ async def get_unverified_users(
 	results_as_dict = result.mappings().all()
 	return results_as_dict
 
+
+async def update_current_password(
+		session: AsyncSession,
+		user: User,
+		new_password: str
+) -> None:
+	user.hashed_password = new_password
+	await session.commit()
+	await session.refresh(user)
