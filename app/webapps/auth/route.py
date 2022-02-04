@@ -14,6 +14,7 @@ from app.core.security import get_email_by_verification_token
 from starlette.responses import RedirectResponse
 from app.utils.common import get_root_url
 from app.utils.social_login.facebook import FacebookLogin
+from app.utils.social_login.google import GoogleLogin
 from app.core.config import settings
 import logging
 
@@ -266,4 +267,42 @@ async def login_facebook_callback(
 
 	# https://stackoverflow.com/questions/62119138/how-to-do-a-post-redirect-get-prg-in-fastapi
 	# https://httpstatuses.com/302 -> To enforce from POST (source URL) to GET (target URL)
+	return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)
+
+
+@router.get('/login_google')  # Tag it as "authentication" for our docs
+async def login_google(request: Request):
+	# Redirect Google OAuth back to our application
+	redirect_uri = request.url_for('google_auth')
+
+	# create google authenticator
+	google = GoogleLogin(request)
+	await google.oauth2connect()
+
+	# get auth URL and redirect tha page
+	return await google.get_authorized_and_redirected(redirect_uri)
+
+
+@router.get('/google-auth')
+async def google_auth(
+		request: Request,
+		session: AsyncSession = Depends(deps.get_session),
+):
+	# Perform Google OAuth
+	google = GoogleLogin(request)
+	await google.oauth2connect()
+
+	# extract user information
+	google_user_raw = await google.get_user_information()
+	google_user = dict(google_user_raw)
+
+	# check email on the database
+	# if not found, add this user into the database
+	user = await save_and_load_user(session, google_user["email"], google_user["name"], google_user["sub"],
+									SignupBy.GMAIL.value)
+
+	# save session
+	await save_session_and_wait(user, request, session)
+
+	# redirect to dashboard
 	return RedirectResponse(url='/', status_code=status.HTTP_302_FOUND)

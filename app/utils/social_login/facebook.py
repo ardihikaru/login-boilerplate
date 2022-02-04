@@ -5,7 +5,6 @@ from typing import Dict, Optional
 import requests_oauthlib
 from requests_oauthlib.compliance_fixes import facebook_compliance_fix
 
-from enum import Enum
 import asyncio
 import logging
 
