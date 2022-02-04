@@ -30,7 +30,6 @@ async def users(
 
 	# Get user data from database
 	users = await get_all_users(session)
-	print(users)
 
 	return templates.TemplateResponse("user/datatable.html", {"request": request,
 															  "session": current_session,
