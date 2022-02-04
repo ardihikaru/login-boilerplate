@@ -3,10 +3,14 @@ from app.db.adapters.user.user import get_user_by_email, update_activation_statu
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
 from typing import Optional
+from app.db.models import user as models
 from app.db.models.user import SignupBy, User
+from app.db.adapters.user.user import insert
 from app.core.security import verify_password, create_email_verification_token
-import logging
 from app.utils.common import get_root_url
+from app.utils.password_validator import PasswordValidator
+from app.core.security import get_password_hash
+import logging
 
 L = logging.getLogger("uvicorn.error")
 
@@ -56,6 +60,29 @@ async def validate_login(user: User, password: str, request: Request) -> (str, s
 
 	# otherwise, everything is OK.
 	return None, None
+
+
+async def validate_signup(user: User, password: str) -> Optional[str]:
+	""" Validate signup data
+
+	:param user:
+	:param password:
+	:return:
+	"""
+	# if record found, reject
+	if user is not None:
+		return "This email has been registered into our system."
+
+	# validate password quality
+	passwd_validator = PasswordValidator(password)
+	err_msg = await passwd_validator.validate_and_wait()
+
+	# if error msg exists, means that there is an error
+	if err_msg is not None:
+		return err_msg
+
+	# otherwise, everything is OK.
+	return None
 
 
 async def generate_email_verification_request_uri(request: Request, email: str) -> str:
@@ -116,3 +143,24 @@ async def activate_account(session: AsyncSession, email: str):
 	user = await get_user_by_email(session, email)
 
 	await update_activation_status(user, session, True)
+
+
+async def save_new_user(session: AsyncSession, full_name: str, email: str, password: str) -> None:
+	""" Activate user account and enable the activated user to login into the system
+
+	:param session:
+	:param full_name:
+	:param email:
+	:param password:
+	:return:
+	"""
+	# hash password
+	hashed_password = get_password_hash(password)
+
+	# build user model
+	new_user = models.User(
+		full_name=full_name, email=email, hashed_password=hashed_password
+	)
+
+	# insert to db
+	await insert(new_user, session)

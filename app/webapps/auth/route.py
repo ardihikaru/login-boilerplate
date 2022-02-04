@@ -7,10 +7,15 @@ from app.db.models.user import User
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.webapps.auth.service import (
 	validate_login, get_user, generate_email_verification_request_uri, activate_account,
-	generate_email_verification_uri
+	generate_email_verification_uri, validate_signup, save_new_user
 )
 from app.core.security import get_email_by_verification_token
 from starlette.responses import RedirectResponse
+from app.core.config import settings
+import logging
+
+L = logging.getLogger("uvicorn.error")
+
 
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(include_in_schema=False)
@@ -69,6 +74,66 @@ async def login_web_post(
 	# redirect to the dashboard
 	redirect_uri = request.url_for('dashboard')
 	return RedirectResponse(url=redirect_uri, status_code=status.HTTP_302_FOUND)
+
+
+@router.get("/signup")
+async def signup_web(
+		request: Request,
+		current_session: Optional[dict] = Depends(deps.get_current_session),  # prevent to access without active session
+):
+	""" Open signup page if there is no session, or be forwarded into dashboard page if a session found
+
+	:param request:
+	:param current_session:
+	:return:
+	"""
+	# if session exist, forward to dashboard page
+	if current_session is not None:
+		redirect_uri = request.url_for('dashboard')
+		return RedirectResponse(url=redirect_uri, status_code=status.HTTP_302_FOUND)
+
+	# otherwise, allow user to open login page
+	return templates.TemplateResponse("auth/signup.html", context={"request": request})
+
+
+@router.post("/signup")
+async def signup_web_post(
+		request: Request,
+		full_name: str = Form(...),
+		email: str = Form(...),
+		password: str = Form(...),
+		session: AsyncSession = Depends(deps.get_session),
+
+):
+	""" Process signup data from user request
+
+	:param request:
+	:param full_name:
+	:param email:
+	:param password:
+	:param session:
+	:return:
+	"""
+	# get user by email
+	user = await get_user(session, email)
+
+	# validate signup input data
+	err_msg = await validate_signup(user, password)
+
+	# if invalid, send an error to the login page
+	if err_msg is not None:
+		return templates.TemplateResponse("auth/signup.html", context={"request": request, "err_msg": err_msg})
+
+	# store to database
+	await save_new_user(session, full_name, email, password)
+
+	# build email verification link
+	email_ver_link = await generate_email_verification_uri(request, email)
+	# TODO: Compose an email via Email Publisher Service
+
+	success_msg = f"Registration success. We have sent a verification account link into your email. " \
+				  f"(REMEMBER: The link will valid ONLY for {settings.EMAIL_VERIFICATION_EXPIRE_MINUTES} minutes)"
+	return templates.TemplateResponse("auth/login.html", context={"request": request, "success_msg": success_msg})
 
 
 @router.get("/verification-request/{email}")
