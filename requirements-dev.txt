@@ -75,3 +75,12 @@ aiosqlite==0.17.0
 
 names==0.3.0
 aioredis==2.0.0
+
+# for Jinja2
+jinja2==3.0.3
+
+# for static files
+aiofiles
+
+# for session middleware
+itsdangerous==2.0.1

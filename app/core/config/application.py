@@ -42,6 +42,7 @@ class Settings(BaseSettings):
     DEBUG: bool = False
     SECRET_KEY: str
     ENVIRONMENT: Literal["DEV", "PYTEST", "STAGE", "PRODUCTION"]
+    EMAIL_VERIFICATION_EXPIRE_MINUTES: int
     ACCESS_TOKEN_EXPIRE_MINUTES: int
     REFRESH_TOKEN_EXPIRE_MINUTES: int
     BACKEND_CORS_ORIGINS: Union[str, List[AnyHttpUrl]]

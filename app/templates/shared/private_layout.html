@@ -1,0 +1,17 @@
+{% extends "shared/base.html" %}
+
+{% block content %}
+<!-- sidebar component -->
+{% include "components/sidebar.html" %}
+<!-- end of sidebar component -->
+
+<div id="body" class="active">
+    <!-- navbar navigation component -->
+    {% include "components/navbar.html" %}
+    <!-- end of navbar navigation component -->
+    <div class="content">
+        {% block content_body %}
+        {% endblock %}
+    </div>
+</div>
+{% endblock %}

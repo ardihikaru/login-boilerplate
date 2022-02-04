@@ -1,0 +1,67 @@
+{% extends "shared/private_layout.html" %}
+
+{% block title %}
+Dashboard Page
+{% endblock %}
+
+{% block extra_header %}
+<!--<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet">-->
+<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/fontawesome.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/solid.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/brands.min.css') }}" rel="stylesheet">
+
+<link href="{{ url_for('static', path='assets/css/master.css') }}" rel="stylesheet">
+
+<link href="{{ url_for('static', path='assets/vendor/datatables/datatables.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content_body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 page-header">
+            <div class="page-pretitle">User Page</div>
+            <h2 class="page-title">Users</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-header">&nbsp;</div>
+                <div class="card-body">
+                    <p class="card-title"></p>
+                    <table class="table table-hover" id="dataTables-example" width="100%">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Fullname</th>
+                            <th>Email</th>
+                            <th>Registered By</th>
+                            <th>Total Login</th>
+                            <th>Last Session At</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for user in users %}
+                        <tr>
+                            <th>{{ user.id }}</th>
+                            <th>{{ user.full_name }}</th>
+                            <th>{{ user.email }}</th>
+                            <th>{{ user.signup_by }}</th>
+                            <th>{{ user.total_login }}</th>
+                            <th>{{ user.session_at }}</th>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', path='assets/vendor/datatables/datatables.min.js') }}"></script>
+<script src="{{ url_for('static', path='assets/js/initiate-datatables.js') }}"></script>
+<script src="{{ url_for('static', path='assets/js/script.js') }}"></script>
+{% endblock %}
