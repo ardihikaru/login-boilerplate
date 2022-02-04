@@ -3,6 +3,8 @@ from fastapi import Request, Depends, APIRouter, status
 from fastapi.templating import Jinja2Templates
 from starlette.responses import FileResponse, RedirectResponse
 from app.webapps import deps
+from app.webapps.dashboard.service import load_user_data, get_statistics
+from sqlalchemy.ext.asyncio import AsyncSession
 
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(include_in_schema=False)
@@ -12,6 +14,7 @@ router = APIRouter(include_in_schema=False)
 async def dashboard(
 		request: Request,
 		current_session: Optional[dict] = Depends(deps.get_current_session),  # prevent to access without active session
+		session: AsyncSession = Depends(deps.get_session),
 ):
 	""" Login page to the dashboard if the session found, or be redirected into a login page if the given session
 		is invalid
@@ -27,7 +30,20 @@ async def dashboard(
 
 	# TODO: create a dummy data
 
-	return templates.TemplateResponse("general_pages/dashboard.html", {"request": request, "session": current_session})
+	# Get user data from database
+	users = await load_user_data(session, order_desc=True)
+
+	users = users[:5]  # limit only take the first 5 users
+
+	# get dashboard statistics
+	statistics = await get_statistics(session, len(users))
+
+	return templates.TemplateResponse("general_pages/dashboard.html", {
+		"request": request,
+		"session": current_session,
+		"users": users,
+		"statistics": statistics,
+	})
 
 
 @router.get('/favicon.ico')

@@ -38,6 +38,7 @@ Dashboard Page
                             <th>Registered By</th>
                             <th>Total Login</th>
                             <th>Last Session At</th>
+                            <th>Activation Status</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -49,6 +50,13 @@ Dashboard Page
                             <th>{{ user.signup_by }}</th>
                             <th>{{ user.total_login }}</th>
                             <th>{{ user.session_at }}</th>
+                            <th>
+                                {% if user.activated is true %}
+                                    <b class="text-end text-success">ACTIVATED</b>
+                                {% else %}
+                                    <b class="text-end text-danger">INACTIVE</b>
+                                {% endif %}
+                            </th>
                         </tr>
                         {% endfor %}
                         </tbody>

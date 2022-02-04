@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.responses import FileResponse, RedirectResponse
 from app.webapps import deps
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.db.adapters.user.user import get_all_users
+from app.db.adapters.user.user import get_users
 
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(include_in_schema=False)
@@ -29,7 +29,7 @@ async def users(
 		return RedirectResponse(url=redirect_uri, status_code=status.HTTP_302_FOUND)
 
 	# Get user data from database
-	users = await get_all_users(session)
+	users = await get_users(session)
 
 	return templates.TemplateResponse("user/datatable.html", {"request": request,
 															  "session": current_session,
