@@ -5,9 +5,8 @@ from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
 from app.core.utils import get_pgsql_integrity_error_msg
 from app.exceptions import ErrorMessage
-from datetime import datetime
+from datetime import datetime, timedelta, date
 from sqlalchemy.sql import text
-import datetime
 
 
 async def get_user_by_email(session: AsyncSession, email: str) -> Optional[User]:
@@ -113,8 +112,8 @@ async def get_sessions_last_7days(
 ) -> List[Mapping]:
 
 	# get today and last 7 days
-	today = datetime.date.today()
-	week_ago = today - datetime.timedelta(days=6)
+	today = date.today()
+	week_ago = today - timedelta(days=6)
 
 	# build a virtual table with 7 days backwards
 	vtable_7d = f"SELECT day::date as date " \
