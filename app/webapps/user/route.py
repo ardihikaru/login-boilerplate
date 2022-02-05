@@ -6,6 +6,7 @@ from app.webapps import deps
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.webapps.user.service import get_user, validate_ch_passwd, update_password, update_full_name
 from app.db.models.user import SignupBy
+from app.db.adapters.user.user import get_users
 
 templates = Jinja2Templates(directory="app/templates")
 router = APIRouter(include_in_schema=False)
@@ -55,11 +56,11 @@ async def changed_passwd(
 
 		return RedirectResponse(url=redirect_uri, status_code=status.HTTP_302_FOUND)
 
-	# get user by email
+	# get user by email; there is a chance that the user does not exist (user=None)
 	user = await get_user(session, current_session["email"])
 
-	# if not register by EMAIL, reject it directlu!
-	if user.signup_by != SignupBy.EMAIL.value:
+	# if not register by EMAIL, reject it directly!
+	if user is not None and user.signup_by != SignupBy.EMAIL.value:
 		err_msg = f"You cannot change the password when you registered with {user.signup_by}."
 		return templates.TemplateResponse("user/change_password.html",
 										  context={"request": request, "err_msg": err_msg, "session": current_session})

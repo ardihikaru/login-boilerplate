@@ -35,13 +35,6 @@ class EmailPublisher(object):
 		self.app_desc = app_desc
 		self.app_website = app_website
 
-		print(" >>> project_dir:", project_dir)
-		print(" >>> folder_path:", folder_path)
-		print(" >>> app_name:", app_name)
-		print(" >>> app_desc:", app_desc)
-		print(" >>> app_website:", app_website)
-		print(" >>> DEFAULT_PROJECT_DIR:", self.DEFAULT_PROJECT_DIR)
-
 	def __await__(self):
 		async def closure():
 			return self
