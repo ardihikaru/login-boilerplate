@@ -1,9 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
+from fastapi import Request
 from app.db.adapters.user.user import get_user_by_email
-from typing import Optional
+from typing import Optional, Dict
 from app.db.models import user as models
 from app.db.models.user import User, SignupBy
-from app.db.adapters.user.user import insert, update_current_password
+from app.db.adapters.user.user import insert, update_current_password, update_current_full_name
 from app.utils.password_validator import PasswordValidator
 from app.core.security import get_password_hash, verify_password
 import logging
@@ -62,3 +63,16 @@ async def update_password(session: AsyncSession, user: User, new_password: str) 
 	await update_current_password(session, user, hash_password)
 
 
+async def update_full_name(session: AsyncSession, user: User, full_name: str,
+						   request: Request, current_session: Dict) -> Dict:
+	# first, update value on the session
+	request.session['user'] = {
+		"email": current_session["email"],
+		"full_name": full_name,
+	}
+	current_session["full_name"] = full_name
+
+	# then, update the database as well
+	await update_current_full_name(session, user, full_name)
+
+	return current_session

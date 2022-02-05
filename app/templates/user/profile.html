@@ -1,7 +1,7 @@
 {% extends "shared/private_layout.html" %}
 
 {% block title %}
-Change Password Page
+User Profile Page
 {% endblock %}
 
 {% block extra_header %}
@@ -19,8 +19,8 @@ Change Password Page
 <div class="container">
     <div class="row">
         <div class="col-md-12 page-header">
-            <div class="page-pretitle">Change Password Page</div>
-            <h2 class="page-title">Changing password</h2>
+            <div class="page-pretitle">User Profile Page</div>
+            <h2 class="page-title">User Profile</h2>
         </div>
     </div>
     <div class="row">
@@ -41,24 +41,26 @@ Change Password Page
                     {% endif %}
                     {% endif %}
 
-                    <form accept-charset="utf-8" method="POST" action="/ch-passwd">
+                    <form accept-charset="utf-8" method="POST" action="/user/profile">
                         <div class="mb-3">
-                            <label for="password" class="form-label">Old Password</label>
-                            <input type="password" name="old_password" placeholder="Password" class="form-control"
+                            <label for="password" class="form-label">Full name</label>
+                            <input type="text" name="full_name" placeholder="full_name" class="form-control"
+                                   value="{{ user.full_name }}"
                                    required>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">New Password</label>
-                            <input type="password" name="new_password" placeholder="Password" class="form-control"
-                                   required>
+                            <label for="password" class="form-label">Email</label>
+                            <input type="text" name="email" placeholder="Password" class="form-control"
+                                   disabled>
                         </div>
                         <div class="mb-3">
-                            <label for="password" class="form-label">New Password Again</label>
-                            <input type="password" name="new_password_again" placeholder="Password" class="form-control"
-                                   required>
+                            <label for="password" class="form-label">Registered by</label>
+                            <input type="text" name="signup_by" placeholder="Password" class="form-control"
+                                   value="{{ user.signup_by }}"
+                                   disabled>
                         </div>
                         <div class="mb-3">
-                            <input type="submit" value="Change password" class="btn btn-primary">
+                            <input type="submit" value="Update Profile" class="btn btn-primary">
                         </div>
                     </form>
                 </div>
