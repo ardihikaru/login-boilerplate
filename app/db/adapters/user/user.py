@@ -7,6 +7,7 @@ from app.core.utils import get_pgsql_integrity_error_msg
 from app.exceptions import ErrorMessage
 from datetime import datetime, timedelta, date
 from sqlalchemy.sql import text
+from fastapi import HTTPException, status
 
 
 async def get_user_by_email(session: AsyncSession, email: str) -> Optional[User]:
@@ -19,6 +20,7 @@ async def get_user_by_email(session: AsyncSession, email: str) -> Optional[User]
 async def insert(
 		user: User,
 		session: AsyncSession,
+		raise_exception=False
 ) -> None:
 	try:
 		session.add(user)
@@ -26,17 +28,19 @@ async def insert(
 		await session.refresh(user)
 	except IntegrityError as err:
 		await session.rollback()
-		raise HTTPException(
-			status_code=status.HTTP_400_BAD_REQUEST,
-			detail=await get_pgsql_integrity_error_msg(err),
-		)
+		if raise_exception:
+			raise HTTPException(
+				status_code=status.HTTP_400_BAD_REQUEST,
+				detail=await get_pgsql_integrity_error_msg(err),
+			)
 	except Exception as err:
 		L.error(f"[{ErrorMessage.UNKNOWN_ERROR.value}] {str(err)}")  # print detailed error in the console
 
-		raise HTTPException(
-			status_code=status.HTTP_400_BAD_REQUEST,
-			detail=ErrorMessage.UNKNOWN_ERROR.value,
-		)
+		if raise_exception:
+			raise HTTPException(
+				status_code=status.HTTP_400_BAD_REQUEST,
+				detail=ErrorMessage.UNKNOWN_ERROR.value,
+			)
 
 
 async def update_activation_status(
