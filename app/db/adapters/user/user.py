@@ -163,3 +163,13 @@ async def update_current_password(
 	user.hashed_password = new_password
 	await session.commit()
 	await session.refresh(user)
+
+
+async def update_current_full_name(
+		session: AsyncSession,
+		user: User,
+		full_name: str
+) -> None:
+	user.full_name = full_name
+	await session.commit()
+	await session.refresh(user)

@@ -4,7 +4,7 @@ from fastapi.templating import Jinja2Templates
 from starlette.responses import FileResponse, RedirectResponse
 from app.webapps import deps
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.webapps.user.service import get_user, validate_ch_passwd, update_password
+from app.webapps.user.service import get_user, validate_ch_passwd, update_password, update_full_name
 from app.db.models.user import SignupBy
 
 templates = Jinja2Templates(directory="app/templates")
@@ -104,3 +104,63 @@ async def changed_passwd_post(
 	success_msg = "Your password has been successfully changed."
 	return templates.TemplateResponse("user/change_password.html",
 									  context={"request": request, "success_msg": success_msg, "session": current_session})
+
+
+@router.get("/user/profile")
+async def user_profile(
+		request: Request,
+		current_session: Optional[dict] = Depends(deps.get_current_session),  # prevent to access without active session
+		session: AsyncSession = Depends(deps.get_session),
+):
+	""" Form to show profile information
+
+	:param request:
+	:param current_session:
+	:param session:
+	:return:
+	"""
+	if current_session is None:
+		redirect_uri = request.url_for('login_web')
+
+		return RedirectResponse(url=redirect_uri, status_code=status.HTTP_302_FOUND)
+
+	# get user by email
+	user = await get_user(session, current_session["email"])
+
+	return templates.TemplateResponse("user/profile.html", {"request": request, "session": current_session,
+																	"user": user})
+
+
+@router.post("/user/profile")
+async def user_profile_post(
+		request: Request,
+		full_name: str = Form(...),
+		current_session: Optional[dict] = Depends(deps.get_current_session),  # prevent to access without active session
+		session: AsyncSession = Depends(deps.get_session),
+
+):
+	""" Process login data from user request
+
+	:param request:
+	:param old_password:
+	:param new_password:
+	:param new_password_again:
+	:param session:
+	:return:
+	"""
+	# get user by email
+	user = await get_user(session, current_session["email"])
+
+	# # if invalid, send an error to the login page
+	# if err_msg is not None:
+	# 	return templates.TemplateResponse("user/profile.html",
+	# 									  context={"request": request, "err_msg": err_msg, "session": current_session})
+
+	# no error. update the password
+	current_session = await update_full_name(session, user, full_name, request, current_session)
+
+	# go to the change password
+	success_msg = "Your fullname has been successfully changed."
+	return templates.TemplateResponse("user/profile.html",
+									  context={"request": request, "success_msg": success_msg,
+											   "session": current_session, "user": user})
