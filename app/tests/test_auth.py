@@ -1,7 +1,7 @@
 import pytest
 from httpx import AsyncClient
 
-from app.models import User
+from app.db.models.user import User
 
 # All test coroutines in file will be treated as marked (async allowed).
 pytestmark = pytest.mark.asyncio
@@ -11,7 +11,7 @@ async def test_login_endpoints(client: AsyncClient, default_user: User):
 
     # access-token endpoint
     access_token = await client.post(
-        "/auth/access-token",
+        "/api/v1/auth/access-token",
         data={
             "username": "user@email.com",
             "password": "password",
@@ -26,7 +26,7 @@ async def test_login_endpoints(client: AsyncClient, default_user: User):
 
     # test-token endpoint
     test_token = await client.post(
-        "/auth/test-token", headers={"Authorization": f"Bearer {access_token}"}
+        "/api/v1/auth/test-token", headers={"Authorization": f"Bearer {access_token}"}
     )
     assert test_token.status_code == 200
     response_user = test_token.json()
@@ -34,7 +34,7 @@ async def test_login_endpoints(client: AsyncClient, default_user: User):
 
     # refresh-token endpoint
     get_new_token = await client.post(
-        "/auth/refresh-token", json={"refresh_token": refresh_token}
+        "/api/v1/auth/refresh-token", json={"refresh_token": refresh_token}
     )
 
     assert get_new_token.status_code == 200

@@ -1,0 +1,20 @@
+<nav id="sidebar" class="active">
+    <div class="sidebar-header">
+        <img src="{{ url_for('static', path='assets/img/logo-horizontal.png') }}"
+             alt="bootraper logo"
+             class="app-logo"
+             width="150"
+        >
+    </div>
+    <ul class="list-unstyled components text-secondary">
+        <li>
+            <a href="/"><i class="fas fa-home"></i> Dashboard</a>
+        </li>
+        <li>
+            <a href="/users"><i class="fas fa-user-friends"></i>Users</a>
+        </li>
+        <li>
+            <a href="/api/v1/docs"><i class="fas fa-file-invoice"></i>API Documentations</a>
+        </li>
+    </ul>
+</nav>

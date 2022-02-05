@@ -1,0 +1,331 @@
+{% extends "shared/private_layout.html" %}
+
+{% block title %}
+Dashboard Page
+{% endblock %}
+
+{% block extra_header %}
+<!--<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet">-->
+<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/fontawesome.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/solid.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/brands.min.css') }}" rel="stylesheet">
+
+<link href="{{ url_for('static', path='assets/css/master.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content_body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 page-header">
+            <div class="page-pretitle">Overview</div>
+            <h2 class="page-title">Dashboard</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="icon-big text-center">
+                                <i class="teal fas fa-user-check"></i>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="detail">
+                                <p class="detail-subtitle">Registered Users</p>
+                                <span class="number">{{ statistics.total_users }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <hr/>
+                        <div class="stats">
+                            <i class="fas fa-calendar"></i> Since Jan 20222
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="icon-big text-center">
+                                <i class="olive fas fa-user-shield"></i>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="detail">
+                                <p class="detail-subtitle">Active Users</p>
+                                <span class="number">{{ statistics.total_session_today }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <hr/>
+                        <div class="stats">
+                            <i class="fas fa-calendar"></i> For today
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="icon-big text-center">
+                                <i class="violet fas fa-user-plus"></i>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="detail">
+                                <p class="detail-subtitle">Average Active Users</p>
+                                <span class="number">{{ statistics.total_session_7days }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <hr/>
+                        <div class="stats">
+                            <i class="fas fa-stopwatch"></i> For last 7 days
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <div class="icon-big text-center">
+                                <i class="orange fas fa-mail-bulk"></i>
+                            </div>
+                        </div>
+                        <div class="col-sm-8">
+                            <div class="detail">
+                                <p class="detail-subtitle">Unverified Accounts</p>
+                                <span class="number">{{ statistics.total_unver_acc_tmonth }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <hr/>
+                        <div class="stats">
+                            <i class="fas fa-envelope-open-text"></i> For this month
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="content">
+                            <div class="head">
+                                <h5 class="mb-0">Traffic Overview (Dummy)</h5>
+                                <p class="text-muted">Current year website visitor data</p>
+                            </div>
+                            <div class="canvas-wrapper">
+                                <canvas class="chart" id="trafficflow"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card">
+                        <div class="content">
+                            <div class="head">
+                                <h5 class="mb-0">User registration overview (Dummy)</h5>
+                                <p class="text-muted">Total monthly new user data</p>
+                            </div>
+                            <div class="canvas-wrapper">
+                                <canvas class="chart" id="sales"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="content">
+                    <div class="head">
+                        <h5 class="mb-0">Registered users</h5>
+                        <p class="text-muted">Last 5 data</p>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <table class="table table-striped">
+                            <thead class="success">
+
+                            <tr>
+                                <th>Email</th>
+                                <th>Registered by</th>
+                                <th>Registration Date</th>
+                                <th class="text-end">Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for user in users %}
+                            <tr>
+                                <th>{{ user.email }}</th>
+                                <th>{{ user.signup_by }}</th>
+                                <th>{{ user.created_at }}</th>
+                                <th>
+                                    {% if user.activated is true %}
+                                    <b class="text-end text-success">ACTIVATED</b>
+                                    {% else %}
+                                    <b class="text-end text-danger">INACTIVE</b>
+                                    {% endif %}
+                                </th>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+
+                        <p align="center"><a href="/users" class="text-capitalize text-info"><b>See all users ...</b></a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="card">
+                <div class="content">
+                    <div class="head">
+                        <h5 class="mb-0">Most Visited Pages (Dummy)</h5>
+                        <p class="text-muted">Current year website visitor data</p>
+                    </div>
+                    <div class="canvas-wrapper">
+                        <table class="table table-striped">
+                            <thead class="success">
+                            <tr>
+                                <th>Page Name</th>
+                                <th class="text-end">Visitors</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td>Dashboard <a href="/"><i class="fas fa-link blue"></i></a></td>
+                                <td class="text-end">8,340</td>
+                            </tr>
+                            <tr>
+                                <td>Login <a href="/login"><i class="fas fa-link blue"></i></a></td>
+                                <td class="text-end">7,280</td>
+                            </tr>
+                            <tr>
+                                <td>Users <a href="/users"><i class="fas fa-link blue"></i></a></td>
+                                <td class="text-end">6,210</td>
+                            </tr>
+                            <tr>
+                                <td>Profile <a href="/user/profile"><i class="fas fa-link blue"></i></a></td>
+                                <td class="text-end">5,176</td>
+                            </tr>
+                            <tr>
+                                <td>Documentation <a href="/api/v1/docs"><i class="fas fa-link blue"></i></a></td>
+                                <td class="text-end">4,276</td>
+                            </tr>
+                            <tr>
+                                <td>Privacy Policy <a href="/privacy-policy"><i class="fas fa-link blue"></i></a></td>
+                                <td class="text-end">1,509</td>
+                            </tr>
+                            <tr>
+                                <td>Terms of Service <a href="/terms-of-service"><i class="fas fa-link blue"></i></a></td>
+                                <td class="text-end">1,100</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-6 col-md-6 col-lg-3">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="dfd text-center">
+                            <i class="blue large-icon mb-2 fab fa-github-square"></i>
+                            <h4 class="mb-0"></h4>
+                            <a href="https://github.com/ardihikaru">
+                                <img
+                                        alt="followers"
+                                        title="Follow me on Github"
+                                        src="https://img.shields.io/github/followers/ardihikaru?color=236ad3&labelColor=1155ba&style=for-the-badge&logo=github&label=Follow"/>
+                            </a>
+                            <br/><br/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-3">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="dfd text-center">
+                            <i class="orange large-icon mb-2 fab fa-twitter-square"></i>
+                            <h4 class="mb-0"></h4>
+                            <a href="https://twitter.com/ardikucing">
+                                <img
+                                        alt="followers"
+                                        title="Follow me on Twitter"
+                                        src="https://img.shields.io/twitter/follow/ardikucing?color=55960c&labelColor=488207&label=Follow&logo=twitter&logoColor=white&style=for-the-badge"/>
+                            </a>
+                            <br/><br/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-3">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="dfd text-center">
+                            <i class="blue large-icon mb-2 fas fa-user-secret"></i>
+                            <h4 class="mb-0"></h4>
+                            <a href="https://github.com/ardihikaru">
+                                <img src="https://shields-io-visitor-counter.herokuapp.com/badge?page=ardihikaru.ardihikaru&style=for-the-badge">
+                            </a>
+                            <br/><br/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 col-md-6 col-lg-3">
+            <div class="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="dfd text-center">
+                            <i class="blue large-icon mb-2 fab fa-stack-overflow"></i>
+                            <h4 class="mb-0"></h4>
+                            <a href="https://stackoverflow.com/users/5989408">
+                                <img
+                                        alt="followers"
+                                        title="Follow me on Github"
+                                        src="https://img.shields.io/stackexchange/stackoverflow/r/5989408?color=%23E05D44&label=REPUTATION&logo=stackoverflow&style=for-the-badge&labelColor=CE4630&logoColor=white"/>
+                            </a>
+                            <br/><br/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', path='assets/vendor/chartsjs/Chart.min.js') }}"></script>
+<script src="{{ url_for('static', path='assets/js/dashboard-charts.js') }}"></script>
+<script src="{{ url_for('static', path='assets/js/script.js') }}"></script>
+{% endblock %}

@@ -9,8 +9,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.config import settings
 from app.core.security import get_password_hash
 from app.main import app
-from app.models import Base, User
-from app.session import async_engine, async_session
+from app.db.models.user import User, Base
+from app.db.session import async_engine, async_session
 
 
 @pytest.fixture(scope="session")
@@ -34,7 +34,6 @@ async def test_db_setup_sessionmaker():
 
     # always drop and create test db tables between tests session
     async with async_engine.begin() as conn:
-
         await conn.run_sync(Base.metadata.drop_all)
         await conn.run_sync(Base.metadata.create_all)
     return async_session

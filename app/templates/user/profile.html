@@ -1,0 +1,76 @@
+{% extends "shared/private_layout.html" %}
+
+{% block title %}
+User Profile Page
+{% endblock %}
+
+{% block extra_header %}
+<!--<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/fontawesome.min.css') }}" rel="stylesheet">-->
+<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/fontawesome.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/solid.min.css') }}" rel="stylesheet">
+<link href="{{ url_for('static', path='assets/vendor/fontawesome/css/brands.min.css') }}" rel="stylesheet">
+
+<link href="{{ url_for('static', path='assets/css/master.css') }}" rel="stylesheet">
+
+<link href="{{ url_for('static', path='assets/vendor/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content_body %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 page-header">
+            <div class="page-pretitle">User Profile Page</div>
+            <h2 class="page-title">User Profile</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-12">
+            <div class="card">
+                <div class="card-header">&nbsp;</div>
+                <div class="card-body">
+
+                    {% if success_msg is defined %}
+                    {% if success_msg is not none %}
+                    <h6 class="alert alert-success">{{ success_msg }}</h6>
+                    {% endif %}
+                    {% endif %}
+
+                    {% if err_msg is defined %}
+                    {% if err_msg is not none %}
+                    <h6 class="alert alert-danger">{{ err_msg }}</h6>
+                    {% endif %}
+                    {% endif %}
+
+                    <form accept-charset="utf-8" method="POST" action="/user/profile">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Full name</label>
+                            <input type="text" name="full_name" placeholder="full_name" class="form-control"
+                                   value="{{ user.full_name }}"
+                                   required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Email</label>
+                            <input type="text" name="email" placeholder="Password" class="form-control"
+                                   disabled>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Registered by</label>
+                            <input type="text" name="signup_by" placeholder="Password" class="form-control"
+                                   value="{{ user.signup_by }}"
+                                   disabled>
+                        </div>
+                        <div class="mb-3">
+                            <input type="submit" value="Update Profile" class="btn btn-primary">
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="{{ url_for('static', path='assets/js/form-validator.js') }}"></script>
+<script src="{{ url_for('static', path='assets/js/script.js') }}"></script>
+{% endblock %}

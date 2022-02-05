@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>
+        Insentif Jasa Pelayanan
+    </title>
+    <style>
+        body {
+            font-size: 16px;
+        }
+
+        .special_offer {
+            font-style: italic;
+            color: orangered;
+        }
+
+        .verify_font {
+            color: whitesmoke;
+        }
+
+        .button {
+            border: none;
+            color: white;
+            padding: 15px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        /* Blue */
+        .button_verify {
+            background-color: #008CBA;
+        }
+
+    </style>
+</head>
+<body>
+<p style="margin: 0px 0px 5px 0px;">Hey {{meta.full_name}},</p>
+<p style="margin: 10px 0px 5px 0px;">
+    <b>Don't miss out!</b>
+    Verify your email now to access everything <b>{{ app_name }}</b> has to offer.
+    <div class="special_offer">
+        > Building an application with the best project starter <br/>
+        > Integrated with many top 3rd party apps and social logins <br/>
+        > Comes with a one-click deployer script <br/>
+        > Code periodically maintained by the authors
+    </div>
+
+<br/>
+<button class="button button_verify">
+    <a href="{{ meta.verify_email_link }}">
+        <b class="verify_font">Verify your email now!</b>
+    </a>
+</button>
+
+</p>
+
+<p style="margin: 8px 0px 8px 0px;">
+    Thanks, <br/>
+    Team <b>{{ app_name }}</b> <br/>
+    <b>{{ app_desc }}</b> <br/>
+    {{ app_website }}
+</p>
+
+</body>
+</html>

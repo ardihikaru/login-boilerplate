@@ -1,0 +1,80 @@
+{% extends "shared/base.html" %}
+
+{% block title %}
+Login Page
+{% endblock %}
+
+{% block extra_header %}
+<link href="{{ url_for('static', path='assets/css/auth.css') }}" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="auth-content">
+    <div class="card">
+        <div class="card-body text-center">
+            <div class="mb-4">
+                <img class="brand"
+                     src="{{ url_for('static', path='assets/img/logo-horizontal.png') }}"
+                     alt="bootstraper logo"
+                     width="300"
+                >
+            </div>
+            <h5 class="mb-4 text-muted">Login to your account</h5>
+
+            {% if success_msg is defined %}
+                {% if success_msg is not none %}
+                <h6 class="alert alert-success">{{ success_msg }}</h6>
+                {% endif %}
+            {% endif %}
+
+            {% if err_msg is defined %}
+                {% if err_msg is not none %}
+                <h6 class="alert alert-danger">{{ err_msg }}</h6>
+                {% endif %}
+            {% endif %}
+
+            {% if evlink is defined %}
+                {% if evlink is not none %}
+                <h6 class="alert alert-info">
+                    Missing your email validation link?
+                    (<a href="{{ evlink }}">Resend Now</a>)
+                </h6>
+                {% endif %}
+            {% endif %}
+
+            <form action="/login" method="POST">
+                <div class="mb-3 text-start">
+                    <label for="email" class="form-label">Email adress</label>
+                    <input type="email" name="email" class="form-control" placeholder="Enter Email" required>
+                </div>
+                <div class="mb-3 text-start">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" name="password" class="form-control" placeholder="Password" required>
+                </div>
+                <div class="mb-3 text-start">
+                    <div class="form-check">
+                        <input class="form-check-input" name="remember" type="checkbox" value="" id="check1">
+                        <label class="form-check-label" for="check1">
+                            Remember me on this device
+                        </label>
+                    </div>
+                </div>
+                <button class="btn btn-primary shadow-2 mb-lg-2">Login</button>
+
+                <br/>
+                <a href="/login_google">
+                    <img src="{{ url_for('static', path='assets/img/login-button-google.png') }}"
+                         alt="Login by Google Account" width="200">
+                </a><br>
+                <a href="/login_facebook">
+                    <img src="{{ url_for('static', path='assets/img/login-button-facebook.png') }}"
+                         alt="Login by Facebook Account" width="200">
+                </a>
+
+            </form>
+            <p class="mb-2 text-muted">Forgot password? <a href="#">Reset (TBD)</a></p>
+            <p class="mb-0 text-muted">Don't have account yet? <a href="/signup">Signup</a></p>
+        </div>
+    </div>
+</div>
+{% endblock %}
