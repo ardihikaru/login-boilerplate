@@ -54,3 +54,25 @@ async def favicon() -> FileResponse:
 	"""
 	favicon_path = 'app/static/favicon.ico'
 	return FileResponse(favicon_path)
+
+
+@router.get('/privacy-policy')
+async def privacy_policy(request: Request):
+	""" Go to privacy policy page
+
+	:return:
+	"""
+
+	# otherwise, allow user to open login/dashboard page
+	return templates.TemplateResponse("general_pages/privacy-policy.html", context={"request": request})
+
+
+@router.get('/terms-of-service')
+async def terms_of_service(request: Request):
+	""" Go to terms of service page
+
+	:return:
+	"""
+
+	# otherwise, allow user to open login/dashboard page
+	return templates.TemplateResponse("general_pages/terms-of-service.html", context={"request": request})
