@@ -6,14 +6,24 @@ A complete login application
 
 ## Requirements
 - Python >= v3.8
-- // TBD
+- Postgresql == 12
+- Docker >= 20.10.6
+- Docker-compose >= 1.26.0
+- PGAdmin (docker) latest (as per 2022-02-06)
+- Redis Master-Slave (docker) >= 6.2.0
+
+## Deployment details
+As today (**2022-02-06**), the database stacks are deployed in [vultr](https://www.vultr.com/) and are remotely accessed
+by the **LoginApp** which is deployed on the [Heroku](https://dashboard.heroku.com/). PS: I personally named it as 
+**YALA**: **Y**et **A**nother **L**ogin **A**plication Boilerplate. You can access the deployed app here: 
+[LoginApp Page](https://shielded-lowlands-46380.herokuapp.com/)
 
 ## Github projects
 There will be three github projects for this Login App:
 - [Api Service](https://github.com/ardihikaru/login-boilerplate) (This repository)
-- Email Publisher (TBD)
+- Email Publisher
     - For the initial phase, it uses a internal class to demonstrate the complete logic (In this repo @ `app/utils/email_publisher.py`)
-- ReactJS App for Frontend (TBD)
+- Admin Dashboard
     - For the initial phase, it adopts [Bootstrap-Simple-Admin-Template](https://github.com/alexis-luna/bootstrap-simple-admin-template) 
         to demonstrate the complete logic (In this repo @ `app/webapps`)
         - FYI: it is also a good practice to implement how we differenciate between exposed endpoints
@@ -21,20 +31,67 @@ There will be three github projects for this Login App:
     - In the future, I plan to build an independent project with [React-Admin from Marmelab](https://github.com/marmelab/react-admin)
     
 ## Architecture design
-- Initial architecture design to implement the Login Application
+- Target final architecture design to implement the Login Application Boilerplate
 ![Login App Figure](https://lh3.googleusercontent.com/pw/AM-JKLVfcUagF7W-4ykKhFafkInqPZuUKhTlatnZpS6nPXG1Ll9pslJdAUtKTKMhMgOpFPTc63Y0pj8Tb5--zmMI9AQaRKiA5rrwT91_ADL99UvzPB4ch_iVwSyR9o2lLk3z4HyOqVl6qA1mY6oB7nOQCv9o=w1109-h948-no?authuser=0)
 
 ## Database schema
-- Simple schema for table `user`
-![User Table Figure](https://lh3.googleusercontent.com/pw/AM-JKLVswqnAT6iUSDh3vlzbZ-ukzvs1fxjxYuRT3IGkiTAqGU3Ayt4ntcHKzgtKoAKmI74hj5kiwiWTh2Mt88zXvXQ3tpEHHkqfydlLjS93LxY-RdS65Qt9fDDiG1q_WtBNVn-adztPemGiUd0KgHW7-BH8=w664-h544-no?authuser=0)
+- Simple schema for table `user`:
+
+    | No 	| Table Name      	| Data Type 	|
+    |----	|-----------------	|-----------	|
+    | 1  	| id (PK)         	| int       	|
+    | 2  	| name            	| varchar   	|
+    | 3  	| email           	| varchar   	|
+    | 4  	| hashed_password 	| varchar   	|
+    | 5  	| total_login     	| int       	|
+    | 6  	| signup_by       	| varchar   	|
+    | 7  	| activated       	| bool      	|
+    | 8  	| session_at      	| datetime  	|
+    | 9  	| created_at      	| datetime  	|
+    | 10 	| updated_at      	| datetime  	|
 
 ## Implementation roadmap
-I will implement the system step-by-step as follows:
-1. Prepare the core backend framework; In this case I used [FastAPI boilerplate](https://github.com/tiangolo/full-stack-fastapi-postgresql) 
+- [x] Prepare the core backend framework; In this case I used [FastAPI boilerplate](https://github.com/tiangolo/full-stack-fastapi-postgresql) 
     from the official.
     - **FYI**: For simplier usage, I ended up using [This template](https://github.com/rafsaf/minimal-fastapi-postgres-template) 
         which simplified the official's with more updated packages. 
-2. // TBD
+- [ ] User registration by email
+    - [x] Registration form
+    - [x] Verification link generator
+    - [x] Verify email when register by using email & password by sending the link in the email
+- [x] Multiple login scenarios:
+    - [x] Login by email & password (will have a register page)
+    - [x] Login by Facebook account
+    - [x] Login by Google account
+    - [ ] Adding more social login and any global login integration 
+- [x] Backend functionalities
+    - [x] Clean code architecture
+    - [x] Decoupled system settings
+    - [x] Dummy data generator for testing usage
+    - [x] CRUD for user data
+    - [x] Database connection with asyncpg
+    - [x] Cache with aioredis for access token and refresh token blacklist management
+    - [x] API routes (exposed schema) and Webapp routes (disclosed schema)
+        - FYI: Some APIs were not finalized yet, as it is not currently used for now
+    - [x] API documentation (FastAPI default feature)
+- [ ] Dashboard
+    - [x] Internal integration with bootstrap admin using Jinja2 templates
+        - [x] Select and integrate an open sourced [simple admin dashboard](https://github.com/alexis-luna/bootstrap-simple-admin-template) 
+        - [x] Implement the webapp functionalities
+            - [x] Login by Email & Password
+            - [x] Login by Facebook account
+            - [x] Login by Google account
+            - [x] Get and edit user profile
+            - [x] List of users
+            - [x] Simple statistics for dashboard
+    - [ ] Integration with any other admin dashboard
+        - [x] Prepare the [admin dashboard project](https://github.com/ardihikaru/login-frontend-boilerplate)
+        - [ ] To Adopt [Marmelab Reactjs Admin template](https://github.com/marmelab/react-admin)
+- [ ] Test automation
+    - [ ] Add robot framework files to test the APIs
+- [ ] Unit Tests
+    - [x] Authentication
+    - TBD   
 
 ## How to use
 - Local Deployment (Tested with **Ubuntu 20.04**)
@@ -88,7 +145,7 @@ I will implement the system step-by-step as follows:
             - Created user: 
                 ```
                 email = example@example.com
-                pass  = OdLknKQJMUwuhpAVHvRC 
+                pass  = OdLknKQJMUwuhpAVHvRC1
                 ```
         - Now, you are ready to run the service. :)
     - Run the database with compose:
@@ -207,3 +264,7 @@ I will implement the system step-by-step as follows:
         ``` 
         heroku logs --tail
         ```
+- Sending email with Gmail and deploy it into Heroku
+    1. Try and close all open gmail accounts except the one you plan to use as the mailer. 
+    2. Navigate to https://accounts.google.com/b/0/DisplayUnlockCaptcha, 
+        while that page is open redeploy the app via heroku. You should be good after that.
