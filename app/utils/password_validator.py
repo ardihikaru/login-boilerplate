@@ -55,7 +55,7 @@ class PasswordValidator(object):
 
 			_ = await process_result
 
-		L.error(f"Total chars={len(self.password)}; Results={self.results}")
+		L.info(f"Total chars={len(self.password)}; Results={self.results}")
 
 		# Now verify each validator
 		# (1) contains at least one lower character
