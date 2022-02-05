@@ -8,6 +8,10 @@ from app.exceptions import ErrorMessage
 from datetime import datetime, timedelta, date
 from sqlalchemy.sql import text
 from fastapi import HTTPException, status
+import logging
+
+
+L = logging.getLogger("uvicorn.error")
 
 
 async def get_user_by_email(session: AsyncSession, email: str) -> Optional[User]:
