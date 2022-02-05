@@ -40,6 +40,9 @@ class Settings(BaseSettings):
 
     # CORE SETTINGS
     DEBUG: bool = False
+    APP_NAME: str = "LoginApp"
+    APP_DESC: str
+    APP_WEBSITE: str
     SECRET_KEY: str
     ENVIRONMENT: Literal["DEV", "PYTEST", "STAGE", "PRODUCTION"]
     EMAIL_VERIFICATION_EXPIRE_MINUTES: int

@@ -9,7 +9,7 @@ from app.webapps.user.service import get_user
 from app.webapps.auth.service import (
 	validate_login, generate_email_verification_request_uri, activate_account,
 	generate_email_verification_uri, validate_signup, save_new_user, save_session_and_wait,
-	save_and_load_user
+	save_and_load_user, build_email_payload
 )
 from app.core.security import get_email_by_verification_token
 from starlette.responses import RedirectResponse
@@ -17,6 +17,7 @@ from app.utils.common import get_root_url
 from app.utils.social_login.facebook import FacebookLogin
 from app.utils.social_login.google import GoogleLogin
 from app.core.config import settings
+from app.utils.email_publisher import epub
 import logging
 
 L = logging.getLogger("uvicorn.error")
@@ -134,7 +135,12 @@ async def signup_web_post(
 
 	# build email verification link
 	email_ver_link = await generate_email_verification_uri(request, email)
-	# TODO: Compose an email via Email Publisher Service
+
+	# build payload to send an email
+	email_payload = await build_email_payload(full_name, email, email_ver_link)
+
+	# Compose an email via Email Publisher Service
+	await epub.compose_and_wait(email_payload)
 
 	success_msg = f"Registration success. We have sent a verification account link into your email. " \
 				  f"(REMEMBER: The link will valid ONLY for {settings.EMAIL_VERIFICATION_EXPIRE_MINUTES} minutes)"
@@ -165,7 +171,12 @@ async def request_verification_email(
 	success_msg = "You verification email has been send to your email."
 	email_ver_link = await generate_email_verification_uri(request, user.email)
 
-	# TODO: Compose an email via Email Publisher Service
+	# build payload to send an email
+	email_payload = await build_email_payload(user.full_name, user.email, email_ver_link)
+
+	# Compose an email via Email Publisher Service
+	await epub.compose_and_wait(email_payload)
+
 
 	return templates.TemplateResponse("auth/login.html", context={"request": request, "success_msg": success_msg})
 

@@ -3,7 +3,7 @@ from app.db.adapters.user.user import get_user_by_email, update_activation_statu
 from app.webapps.user.service import get_user
 from fastapi.templating import Jinja2Templates
 from fastapi import Request
-from typing import Optional
+from typing import Optional, Dict
 from app.db.models import user as models
 from app.db.models.user import SignupBy, User
 from app.db.adapters.user.user import insert
@@ -196,3 +196,21 @@ async def save_session_and_wait(user: User, request: Request, session: AsyncSess
 
 	# Update total login and last active session
 	await update_session_login(user, session)
+
+
+async def build_email_payload(user: str, email: str, email_ver_link: str) -> Dict:
+	""" Build an object to trigger the email composer
+
+	:param user:
+	:param email:
+	:param email_ver_link:
+	:return:
+	"""
+	return {
+		"email": email,
+		"subject_email": "Action required: Activate your account now",
+		"meta" : {
+			"full_name": user,
+			"verify_email_link" : email_ver_link,
+		}
+	}
