@@ -33,10 +33,13 @@ async def dashboard(
     # Get user data from database
     users = await load_user_data(session, order_desc=True)
 
+    # get the total users before being limited
+    total_registered_users = len(users)
+
     users = users[:5]  # limit only take the first 5 users
 
     # get dashboard statistics
-    statistics = await get_statistics(session, len(users))
+    statistics = await get_statistics(session, total_registered_users)
 
     return templates.TemplateResponse("general_pages/dashboard.html", {
         "request": request,
