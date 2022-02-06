@@ -59,6 +59,7 @@ class DummyUserDataGenerator:
         start_of_week = today_date - start_delta  # e.g. datetime.date(2022, 01, 31)
         # convert back to a datetime
         to_datetime_again = datetime.combine(start_of_week, today_time)
+        total_login = random.randint(0, 60)
 
         # if `default_activated` parameter is given, set the activated value as per given value
         if default_activated:
@@ -66,11 +67,15 @@ class DummyUserDataGenerator:
             signup_by = self.signup_type[random.randint(0, 2)]  # get login type by index
             activated = bool(random.randint(0, 1)) if signup_by == SignupBy.EMAIL.value else True
 
+        # if total login is higher than zero, set the activated value as True
+        elif total_login > 0:
+            activated = True
+            signup_by = self.signup_type[random.randint(0, 2)]  # get login type by index
+
         # otherwise, if login by Email, randomize the activation status between True or False
         else:
             activated = default_activated
-            # generate variable values
-            signup_by = SignupBy.EMAIL.value
+            signup_by = SignupBy.EMAIL.value  # generate variable values
 
         # generate a random user detailed information based on the generate random name
         user = {
