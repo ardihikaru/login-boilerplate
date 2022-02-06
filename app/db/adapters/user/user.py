@@ -10,7 +10,6 @@ from sqlalchemy.sql import text
 from fastapi import HTTPException, status
 import logging
 
-
 L = logging.getLogger("uvicorn.error")
 
 
@@ -108,7 +107,7 @@ async def get_session_today(
 ) -> List[Mapping]:
 	query = "SELECT full_name, email, signup_by, total_login, session_at, created_at, activated " \
 			"FROM public.user " \
-			"WHERE DATE(session_at) = DATE(NOW()) " \
+			"WHERE DATE(session_at) = DATE(NOW()) "
 
 	result = await session.execute(text(query))
 	results_as_dict = result.mappings().all()
@@ -118,7 +117,6 @@ async def get_session_today(
 async def get_sessions_last_7days(
 		session: AsyncSession,
 ) -> List[Mapping]:
-
 	# get today and last 7 days
 	today = date.today()
 	week_ago = today - timedelta(days=6)
@@ -129,12 +127,12 @@ async def get_sessions_last_7days(
 
 	# build a virtual table to count total sessions each day
 	vtable_session = "SELECT DATE(session_at) date, COUNT(DATE(session_at)) as total " \
-			"FROM public.user " \
-			"GROUP BY DATE(session_at) "
+					 "FROM public.user " \
+					 "GROUP BY DATE(session_at) "
 
 	# (LEFT) JOIN `vtable_7d` table with `session_vtable` table, and set default value as 0 IFNULL
 	query = f"SELECT d.date, COALESCE(u.total, 0) as total " \
-			f"FROM ({vtable_7d}) as d LEFT JOIN ({vtable_session}) as u ON d.date = u.date " \
+			f"FROM ({vtable_7d}) as d LEFT JOIN ({vtable_session}) as u ON d.date = u.date "
 
 	result = await session.execute(text(query))
 	results_as_dict = result.mappings().all()
