@@ -28,6 +28,7 @@ async def get_current_token(
 
     return token
 
+
 async def get_current_user(
     session: AsyncSession = Depends(get_session), token: str = Depends(reusable_oauth2)
 ) -> User:
@@ -55,6 +56,7 @@ async def get_current_user(
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     return user
+
 
 async def token_revoked(access_token: str) -> bool:
     if await RedisClient.get(access_token) is None:
