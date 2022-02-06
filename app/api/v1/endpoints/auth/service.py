@@ -11,6 +11,7 @@ from app.core.config import settings
 from app.db.models.user import User
 from app.utils import RedisClient
 from datetime import datetime
+from app.api.v1.endpoints.auth.utils import AuthErrMessage
 
 L = logging.getLogger("uvicorn.error")
 
@@ -21,10 +22,14 @@ async def validate_user(
 	result = await session.execute(select(User).where(User.email == form_data.username))
 	user: Optional[User] = result.scalars().first()
 	if user is None:
-		raise HTTPException(status_code=400, detail="Incorrect email or password")
+		raise HTTPException(status_code=400, detail=AuthErrMessage.INCORRECT_EMAIL_PASSWORD.value)
 
 	if not security.verify_password(form_data.password, user.hashed_password):  # type: ignore
-		raise HTTPException(status_code=400, detail="Incorrect email or password")
+		raise HTTPException(status_code=400, detail=AuthErrMessage.INCORRECT_EMAIL_PASSWORD.value)
+
+	# validate whether the account has been activated or inactive
+	if not user.activated:
+		raise HTTPException(status_code=400, detail=AuthErrMessage.INACTIVE_USER.value)
 
 	return user
 
