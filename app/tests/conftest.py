@@ -69,6 +69,7 @@ async def activated_user_data() -> Dict:
     generator = DummyUserDataGenerator()
     return await generator.generate_one(raw=True, default_activated=True)
 
+
 @pytest.fixture
 async def inactive_user_data() -> Dict:
     """ Set up a dummy data for inactive user
