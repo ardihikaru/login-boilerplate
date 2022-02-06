@@ -11,7 +11,6 @@ from app.core.security import get_password_hash
 from app.main import app
 from app.db.models.user import User, Base
 from app.db.session import async_engine, async_session
-from app.scripts.users.generator import DummyUserDataGenerator
 
 
 @pytest.fixture(scope="session")
@@ -65,9 +64,12 @@ async def activated_user_data() -> Dict:
 
     :return:
     """
-
-    generator = DummyUserDataGenerator()
-    return await generator.generate_one(raw=True, default_activated=True)
+    return {
+        "full_name": "activated.user",
+        "email": "activated.user@gmail.com",
+        "password": "activated.user@gmail.com",
+        "activated": True,
+    }
 
 
 @pytest.fixture
@@ -76,9 +78,12 @@ async def inactive_user_data() -> Dict:
 
     :return:
     """
-
-    generator = DummyUserDataGenerator()
-    return await generator.generate_one(raw=True, default_activated=False)
+    return {
+        "full_name": "inactive.user",
+        "email": "inactive.user@gmail.com",
+        "password": "inactive.user@gmail.com",
+        "activated": False,
+    }
 
 
 @pytest.fixture
@@ -87,8 +92,12 @@ async def random_user_login() -> Dict:
 
     :return:
     """
-    generator = DummyUserDataGenerator()
-    return await generator.generate_one(raw=True, default_activated=False)
+    return {
+        "full_name": "random.user",
+        "email": "random.user@gmail.com",
+        "password": "random.user@gmail.com",
+        "activated": False,
+    }
 
 
 @pytest.fixture
