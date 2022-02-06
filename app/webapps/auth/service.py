@@ -114,7 +114,7 @@ async def generate_email_verification_uri(request: Request, email: str) -> str:
     verification_uri = request.url_for('verify_email')
 
     # build email verification link
-    email_ver_link = "{}?link={}".format(
+    email_ver_link = "{}?token={}".format(
         verification_uri, token
     )
 
@@ -169,7 +169,8 @@ async def save_and_load_user(session: AsyncSession, email: str, full_name: str,
 
         # build user model
         new_user = models.User(
-            full_name=full_name, email=email, hashed_password=hashed_password, signup_by=signup_by
+            full_name=full_name, email=email, hashed_password=hashed_password, signup_by=signup_by,
+            activated=True
         )
 
         # insert to db
