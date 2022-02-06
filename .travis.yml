@@ -8,4 +8,4 @@ install:
   - pip install -r requirements-dev.txt
 # command to run tests
 script:
-  - python -m pytest
+  - python -m pytest --disable-pytest-warnings
