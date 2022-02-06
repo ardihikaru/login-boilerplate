@@ -6,6 +6,7 @@ from pydantic import BaseSettings
 
 PROJECT_DIR = Path(__file__).parent.parent.parent.parent
 
+
 class Google(BaseSettings):
     """Google configuration model definition.
 

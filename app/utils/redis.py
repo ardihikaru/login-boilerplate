@@ -4,7 +4,7 @@ import logging
 
 import aioredis
 import aioredis.sentinel
-from aioredis.exceptions import RedisError, ConnectionError
+from aioredis.exceptions import RedisError
 from app.core.config import redis as redis_conf
 
 

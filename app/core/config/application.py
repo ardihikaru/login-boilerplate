@@ -37,7 +37,6 @@ class Settings(BaseSettings):
 
     """
 
-
     # CORE SETTINGS
     DEBUG: bool = False
     APP_NAME: str = "LoginApp"

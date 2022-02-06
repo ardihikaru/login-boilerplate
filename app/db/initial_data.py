@@ -15,7 +15,6 @@ from app.core.config import settings
 from app.db.models.user import User
 from app.db.session import async_session
 from app.scripts.users.generator import DummyUserDataGenerator
-from distutils.util import strtobool
 
 
 async def main() -> None:
@@ -53,8 +52,8 @@ async def main() -> None:
         # otherwise, try creating some dummy users
         elif settings.ADD_DUMMY_USERS and total_users < settings.TOTAL_DUMMY_USERS:
             generator = DummyUserDataGenerator(settings.TOTAL_DUMMY_USERS)
-            generator.run()
-            dummy_users = generator.get_dummy_users()
+            await generator.run()
+            dummy_users = await generator.get_dummy_users()
 
             for dummy_user in dummy_users:
                 new_dummy_user = User(

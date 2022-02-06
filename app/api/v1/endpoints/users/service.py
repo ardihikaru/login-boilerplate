@@ -1,11 +1,10 @@
 from typing import List, Mapping
-from fastapi import Depends, HTTPException, status
+from fastapi import HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.db.models.user import User
 from sqlalchemy.exc import IntegrityError
 from app.core.utils import get_pgsql_integrity_error_msg
 from app.exceptions import ErrorMessage
-from sqlalchemy import select, func
 from sqlalchemy.sql import text
 import logging
 
@@ -33,6 +32,7 @@ async def insert(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=ErrorMessage.UNKNOWN_ERROR.value,
         )
+
 
 async def build_where_by(activated: bool, signup_by: str) -> str:
     where_by = "1 = 1"
