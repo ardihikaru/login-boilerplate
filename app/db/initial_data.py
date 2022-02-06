@@ -15,7 +15,6 @@ from app.core.config import settings
 from app.db.models.user import User
 from app.db.session import async_session
 from app.scripts.users.generator import DummyUserDataGenerator
-from distutils.util import strtobool
 
 
 async def main() -> None:

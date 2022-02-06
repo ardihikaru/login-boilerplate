@@ -7,6 +7,7 @@ from typing import List
 
 PROJECT_DIR = Path(__file__).parent.parent.parent.parent
 
+
 class Facebook(BaseSettings):
     """Facebook configuration model definition.
 

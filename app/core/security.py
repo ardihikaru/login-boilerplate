@@ -5,11 +5,10 @@ Black-box security shortcuts to generate JWT tokens and password hash/verify
 """
 
 from datetime import datetime, timedelta
-from typing import Any, Tuple, Union, Optional, Dict
+from typing import Any, Tuple, Union, Optional
 
 from jose import jwt
 from passlib.context import CryptContext
-from app.db.schemas import TokenPayload
 from pydantic import ValidationError
 
 from app.core.config import settings

@@ -1,9 +1,9 @@
 from typing import Optional, List
 
-from fastapi import Query, Form
+from fastapi import Query
 from pydantic import BaseModel, EmailStr
 from datetime import datetime
-from app.db.models.user import SignupBy, signup_by_list
+from app.db.models.user import signup_by_list
 
 
 class BaseUser(BaseModel):

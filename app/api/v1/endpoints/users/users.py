@@ -6,32 +6,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.db import schemas
 from app.db.models import user as models
 from app.api import deps
-from app.api.v1.endpoints.users.service import insert, get_all_users
+from app.api.v1.endpoints.users.service import insert
 from app.core.security import get_password_hash
-from starlette.responses import RedirectResponse
-from app.exceptions import ErrorMessage
-import httpx
 
 router = APIRouter()
-
-
-@router.get("", response_model=schemas.UserAll)
-async def read_user_me(
-    _: models.User = Depends(deps.get_current_user),
-    session: AsyncSession = Depends(deps.get_session),
-    query_data: schemas.QueryParams = Depends(schemas.query_params),  # read URL query to get [activated] value
-):
-    """
-    Get current user.
-    """
-
-    # await get_all_users(session)
-    users = await get_all_users(session, query_data.activated, query_data.signup_by)
-
-    return {
-        "total": len(users),
-        "data": users,
-    }
 
 
 @router.post("", response_model=schemas.User)
