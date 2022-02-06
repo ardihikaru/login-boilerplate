@@ -32,7 +32,7 @@ async def insert(
     except IntegrityError as err:
         await session.rollback()
         if raise_exception:
-            raise fastapi.HTTPException(
+            raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
                 detail=await get_pgsql_integrity_error_msg(err),
             )
