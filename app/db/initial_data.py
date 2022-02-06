@@ -53,8 +53,8 @@ async def main() -> None:
         # otherwise, try creating some dummy users
         elif settings.ADD_DUMMY_USERS and total_users < settings.TOTAL_DUMMY_USERS:
             generator = DummyUserDataGenerator(settings.TOTAL_DUMMY_USERS)
-            generator.run()
-            dummy_users = generator.get_dummy_users()
+            await generator.run()
+            dummy_users = await generator.get_dummy_users()
 
             for dummy_user in dummy_users:
                 new_dummy_user = User(
